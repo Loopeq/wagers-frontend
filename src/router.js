@@ -6,7 +6,7 @@ import AppLogin from './views/AppLogin.vue'
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        {path: '/', component: AppLogin}, 
+        {path: '/login', alias:"/", component: AppLogin}, 
         {path: '/matches', component: AppMatches, meta: { requiresAuth: true }},
         {
             path: '/match/:matchId',
@@ -29,9 +29,8 @@ function getCookie(name){
 
 router.beforeEach((to, from, next) => {
     const token = getCookie('wags');
-    console.log(token)
     if (to.meta.requiresAuth && !token) {
-        next('/');  
+        next('/login');  
     } else if (to.path === '/' && token) {
         next('/matches');
     } else {
