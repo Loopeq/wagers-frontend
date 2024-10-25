@@ -38,6 +38,7 @@
                             if (response.status === 204 || response.status === 200){
                                 this.authError = false
                                 this.succsess = true
+                                this.$router.replace('/matches')
                             } 
                         })
                     }
