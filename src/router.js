@@ -20,21 +20,17 @@ const router = createRouter({
 })
 
 
-function getCookie(name){
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
-
-router.beforeEach((to, from, next) => {
-    const token = getCookie('wags');
-    if (to.meta.requiresAuth && !token) {
-        next('/login');  
-    } else if (to.path === '/' && token) {
-        next('/matches');
-    } else {
-        next();
+router.beforeEach( async (to, from, next) => {
+    try {
+        await axios.get('auth/check');
+        console.log('in try')
+        if (to.meta.requiresAuth) next();
+        else next('/') 
+    } 
+    catch {
+        console.log('in catch')
+        if (to.meta.requiresAuth) next('/login')
+        else next();
     }
 })
 
