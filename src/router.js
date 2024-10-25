@@ -20,33 +20,31 @@ const router = createRouter({
     linkExactActiveClass: 'active'
 })
 
-let isAuth = false; 
+let isAuthenticated = false; 
 
 router.beforeEach( async (to, from, next) => {
 
-    if (to.path === '/login'){
+    if (to.path === '/login') {
         next();
-        return; 
-    }
-
-    if (isAuth){
-        if (to.meta.requiresAuth) next();
-        else next('/');
         return;
     }
 
-    try {
-        await axios.get('auth/check');
-        isAuth = true;
-        console.log('in try')
-        if (to.meta.requiresAuth) next();
-        else next('/') 
-    } 
-    catch {
-        isAuth = false
-        console.log('in catch')
-        if (to.meta.requiresAuth) next('/login')
-        else next();
+    if (to.meta.requiresAuth) {
+        try {
+          
+            if (isAuthenticated) {
+                next();
+                return;
+            }
+            await axios.get('/auth/check');
+            isAuthenticated = true; 
+            next(); 
+        } catch (error) {
+            isAuthenticated = false; 
+            next('/login');
+        }
+    } else {
+        next();
     }
 })
 
