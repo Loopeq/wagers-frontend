@@ -7,7 +7,7 @@
       <p class="ellipsis">{{ match.league_name }}</p>
       <div class="box-row nomrg">
         <p class="ellipsis ghost" style="padding-right: 8px;">{{ justify_date(match.start_time) }}</p>
-        <p class="ghost timestamp">Через {{ calculateTimestamp(match.start_time)}}</p>
+        <p class="ghost timestamp">{{ calculateTimestamp(match.start_time)}}</p>
       </div>
 
     </div>
@@ -67,10 +67,10 @@ export default {
                 const diffInMinutes = Math.abs(diffInMs / (1000 * 60));
 
                 if (diffInMinutes <= 60 && diffInMinutes.toFixed(0) != 0) {
-                  return `${diffInMinutes.toFixed(0)} мин.` 
+                  return `Через ${diffInMinutes.toFixed(0)} мин.` 
                 }
                 else {
-                  return `${(diffInMinutes / 60).toFixed(0)} час.`
+                  return `Через ${(diffInMinutes / 60).toFixed(0)} час.`
                 }
             }
 }, 
