@@ -11,7 +11,7 @@ const NON_DEV = 'https://api.swaeger.com'
 // eslint-disable-next-line
 const DEV = 'http://localhost:8000'
 const app = createApp(App)
-app.config.globalProperties.$hostname = DEV
+app.config.globalProperties.$hostname = NON_DEV
 app.use(VueAxios, axios)
 app.use(router)
 app.mount('#app')
