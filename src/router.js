@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import AppMatches from './views/AppMatches.vue'
 import AppChange from './views/AppChange.vue'
 import AppLogin from './views/AppLogin.vue'
+import axios from 'axios'
 
 const router = createRouter({
     history: createWebHistory(),
