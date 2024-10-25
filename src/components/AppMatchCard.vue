@@ -60,6 +60,9 @@ export default {
       calculateTimestamp(start_time){
                 let utc_now = new Date()
                 let utc_start = moment.utc(start_time)
+                if (utc_now > utc_start.toDate()){
+                  return
+                }
                 const diffInMs = utc_now - utc_start.toDate(); 
                 const diffInMinutes = Math.abs(diffInMs / (1000 * 60));
 
