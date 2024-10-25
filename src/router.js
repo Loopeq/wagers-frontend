@@ -7,12 +7,11 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {path: '/login', alias:"/", component: AppLogin}, 
-        {path: '/matches', component: AppMatches, meta: { requiresAuth: true }},
+        {path: '/matches', component: AppMatches},
         {
             path: '/match/:matchId',
             name: 'match',
             component: AppChange,
-            meta: { requiresAuth: true }
         }
     ],
     linkActiveClass: 'active',
@@ -29,6 +28,7 @@ function getCookie(name){
 
 router.beforeEach((to, from, next) => {
     const token = getCookie('wags');
+    console.log(token)
     if (to.meta.requiresAuth && !token) {
         next('/login');  
     } else if (to.path === '/' && token) {
