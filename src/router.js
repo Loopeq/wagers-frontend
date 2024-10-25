@@ -36,7 +36,7 @@ router.beforeEach( async (to, from, next) => {
                 next();
                 return;
             }
-            await axios.get('/auth/check');
+            await axios.get('/auth/check', {withCredentials: true});
             isAuthenticated = true; 
             next(); 
         } catch (error) {
