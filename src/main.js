@@ -3,9 +3,8 @@ import App from './AppBase.vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import router from './router'
-import './theme.css'
+import './theme.css' 
 
-axios.defaults.withCredentials = true
 
 // eslint-disable-next-line
 const NON_DEV = 'https://wagers-dev.onrender.com'
