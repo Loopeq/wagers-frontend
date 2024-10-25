@@ -30,6 +30,7 @@
                         params.append('password', this.password.trim())
                         await this.axios
                         .post(this.$hostname + `/auth/jwt/login`, params, {
+                            withCredentials: true, 
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded'
                             }, 
