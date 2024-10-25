@@ -30,10 +30,11 @@
                         params.append('password', this.password.trim())
                         await this.axios
                         .post(this.$hostname + `/auth/jwt/login`, params, {
+                            withCredentials: true,
                             headers: {
+                                'Access-Control-Allow-Origin': this.$hostname, 
                                 'Content-Type': 'application/x-www-form-urlencoded'
                             }, 
-                            withCredentials: true
                         })
                         .then(response => {
                             if (response.status === 204 || response.status === 200){
