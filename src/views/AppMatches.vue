@@ -124,12 +124,12 @@ import AppChange from './AppChange.vue';
 
             async fetchFilters(){
                 await this.axios
-                    .get(this.$hostname + '/filters')
+                    .get(this.$hostname + '/filters', { withCredentials: true })
                     .then(response => {
                         this.timeFilters = response.data['time_filters']
                         this.valueFilters = response.data['value_filters']
                         this.loading.filters = false
-                    }, {withCredentials: true})
+                    })
                     .catch(error => { console.log(error) })
                     .finally(() => {})
             }, 

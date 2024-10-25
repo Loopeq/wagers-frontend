@@ -53,7 +53,7 @@ import AppChangeHistory from '@/components/AppChangeComponents/AppChangeHistory.
 
                 const request = async() => {
                 await this.axios
-                    .get(this.$hostname + `/match/${this.matchId}`, {withCredentials: true})
+                    .get(this.$hostname + `/match/${this.matchId}`, { withCredentials: true })
                     .then(response => {
                         this.changes = response.data['changes']
                         this.match = response.data['match']
