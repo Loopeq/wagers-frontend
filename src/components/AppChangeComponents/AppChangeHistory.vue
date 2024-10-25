@@ -99,14 +99,25 @@ import { format_date } from '@/utils';
             }, 
             async fetchHistory(){ 
                 await this.axios
-                    .get(this.$hostname + '/history' + `/${this.teams.homeName}`, {params: {current_match_id: this.matchId}, withCredentials: true})
+                    .get(this.$hostname + '/history',  {
+                        withCredentials: true, 
+                        params: {
+                            team_name: this.teams.homeName, 
+                            current_match_id: this.matchId}
+                        })
                     .then(response => {
                         this.homeHistory = response.data
                 })
                     .catch(error => {console.log(error)})
 
                 await this.axios
-                    .get(this.$hostname + '/history' + `/${this.teams.awayName}`, {params: {current_match_id: this.matchId}})
+                    .get(this.$hostname + '/history', {
+                        withCredentials: true, 
+                        params: {
+                            team_name: this.teams.awayName, 
+                            current_match_id: this.matchId
+                        }
+                        })
                     .then(response => {
                         this.awayHistory = response.data 
                 })

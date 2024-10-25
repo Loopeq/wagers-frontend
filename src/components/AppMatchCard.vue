@@ -12,8 +12,8 @@
 
     </div>
     
-    <div class="box-row right" style="width: 300px; justify-content: space-between;">
-        <div v-if='match.change_count'>
+    <div class="box-row right" style="width: 300px; justify-content: right;">
+        <div class='fixed-200' v-if='match.change_count'>
           <h2 style="padding:8px; text-align: center;">{{ match.change_count }}</h2>
           <p style="padding:8px; text-align: center;">{{justify_date(match.last_change_time)}}</p>
         </div>
@@ -73,10 +73,8 @@ export default {
                   return `Через ${(diffInMinutes / 60).toFixed(0)} час.`
                 }
             }
-}, 
+}
 
-
-  components: {}
 }
 
 </script>

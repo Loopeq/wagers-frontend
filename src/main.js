@@ -10,8 +10,10 @@ import './theme.css'
 const NON_DEV = 'https://api.swaeger.com'
 // eslint-disable-next-line
 const DEV = 'http://localhost:8000'
+
 const app = createApp(App)
 app.config.globalProperties.$hostname = NON_DEV
+axios.defaults.baseURL = app.config.globalProperties.$hostname
 app.use(VueAxios, axios)
 app.use(router)
 app.mount('#app')

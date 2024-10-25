@@ -4,6 +4,7 @@ import AppChange from './views/AppChange.vue'
 import AppLogin from './views/AppLogin.vue'
 import axios from 'axios'
 
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -36,7 +37,7 @@ router.beforeEach( async (to, from, next) => {
                 next();
                 return;
             }
-            await axios.get('/auth/check', {withCredentials: true});
+            await axios.get(`/auth/check`, {withCredentials: true});
             isAuthenticated = true; 
             next(); 
         } catch (error) {
