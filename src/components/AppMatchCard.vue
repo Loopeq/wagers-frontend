@@ -1,5 +1,6 @@
 <template>
 <div class="card" :class="match.match_id === selectedId ? 'marked-box' : ''">
+  <hr />
   <div class='box-row hovered' @click="$emit('onClick', match.id)" style="justify-content: space-between;">
     <div class="box-column head">
       <h3 class="ellipsis">{{ match.home_name }}</h3>
@@ -9,19 +10,17 @@
         <p class="ellipsis ghost" style="padding-right: 8px;">{{ justify_date(match.start_time) }}</p>
         <p class="ghost timestamp">{{ calculateTimestamp(match.start_time)}}</p>
       </div>
-
     </div>
     
     <div class="box-row right" style="width: 300px; justify-content: right;">
         <div class='fixed-200' v-if='match.change_count'>
           <h2 style="padding:8px; text-align: center;">{{ match.change_count }}</h2>
-          <p style="padding:8px; text-align: center;">{{justify_date(match.last_change_time)}}</p>
+          <p class='timestamp' style="padding:8px; text-align: center;">{{calculateTimestampChange(match.last_change_time)}}</p>
         </div>
         <span @click.stop='$emit("onNavigate", match.match_id)' class="material-symbols-outlined" style='padding-right: 8px;'>open_in_new</span>
     </div>
 
   </div>
-  <hr />
 </div>
 </template>
 
@@ -72,7 +71,28 @@ export default {
                 else {
                   return `Через ${(diffInMinutes / 60).toFixed(0)} час.`
                 }
+      }, 
+
+      calculateTimestampChange(created_at){
+                let utc_now = new Date()
+                let utc_change = moment.utc(created_at)
+                const diffInMs = utc_now - utc_change.toDate(); 
+                const diffInMinutes = diffInMs / (1000 * 60);
+
+                if (utc_now.getUTCDate() === utc_change.date()) {
+
+                    const diff = diffInMinutes.toFixed(0);
+                    
+                    if (diffInMinutes <= 60){
+                      return `${diff} мин. назад`
+                    }
+                    else { 
+                      return this.justify_date(created_at)
+                    }
+                }
             }
+
+
 }
 
 }
@@ -130,7 +150,8 @@ export default {
 
 .timestamp{
   font-size: 11px;
-  color: rgba(255, 60, 0, 0.7);
+  color:   #059E84;
+
 }
 
 </style>

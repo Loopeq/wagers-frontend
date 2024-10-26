@@ -177,25 +177,25 @@ import moment from 'moment';
 
 
 .high{
-    font-size: 10px;
-    color: #FF3D00;
+    text-align: left;
 }
 
 .medium{
-    font-size: 10px;
-    color: #FF3D00;
     opacity: 0.8;
+    text-align: left;
 }
 
 .low{
-    font-size: 10px;
-    color: #FF3D00;
-    opacity: 0.6
+    opacity: 0.6;
+    text-align: left;
 }
 
 .high, .medium, .low{
+    font-size: 10px;
     font-weight: 500;
+    color: #059E84;
 }
+
 
 .no-wrap{
     flex: 5;

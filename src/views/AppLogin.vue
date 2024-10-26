@@ -1,10 +1,13 @@
 <template>
     <div class="centered-box-wrapper">
-        <div class="main">
-            <form class="form1" @submit.prevent="onSubmit">
-                <input v-model="login" class="un" :class="{error: authError, agreed: succsess }" type="text" placeholder="Login" style="margin-bottom: 10px">
-                <input v-model='password' class="un" :class="{error: authError, agreed: succsess }" type="password"  placeholder="Password" style="margin-bottom: 10px">
-                <button class="submit un" :disabled="!(login && password)">Enter</button>
+        <div class="main" :class="{error: authError, agreed: succsess }">
+            <div class="loader-wrapper" v-if="loading">
+                <span class="loader"></span>
+            </div>
+            <form v-else class="form1" @submit.prevent="onSubmit">
+                <input v-model="login" class="un" type="text" placeholder="Login" style="margin-bottom: 10px">
+                <input v-model='password' class="un" type="password"  placeholder="Password" style="margin-bottom: 10px">
+                <button class="submit un" :disabled="!(login && password)" :class="!(login && password) ? 'disabled' : ''">Enter</button>
             </form>
         </div>
     </div>
@@ -17,6 +20,7 @@
                 login: null,
                 password: null,
                 authError: false,
+                loading: false,
                 succsess: false
             }
         },
@@ -24,6 +28,7 @@
         methods:{
             async onSubmit(){
                 if (this.login.length && this.password.length){
+                    this.loading = true
                     try {
                         const params = new URLSearchParams()
                         params.append('username', this.login.trim())
@@ -39,14 +44,18 @@
                             if (response.status === 204 || response.status === 200){
                                 this.authError = false
                                 this.succsess = true
+                                this.loading = false
                                 this.$router.replace('/matches')
+
                             } 
+
                         })
                     }
                     catch {
                         this.authError = true
                         this.password = null 
                         this.login = null
+                        this.loading = false
                     }
                     }
                 }
@@ -63,6 +72,9 @@ p{
     text-align: center;
 }
 
+body{
+    overflow-x: hidden;
+}
 
 .main {
     background-color: #FFFFFF;
@@ -73,6 +85,7 @@ p{
     width: 400px;
     height: 400px;
     margin: 7em auto;
+    border: 5px solid rgba(255, 0, 0, 0);
     box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
 
     }
@@ -85,7 +98,7 @@ p{
 
 .un {
     width: 76%;
-    color: rgb(38, 50, 56);
+    color: rgb(0, 0, 0);
     font-weight: 700;
     font-size: 12px;
     letter-spacing: 1px;
@@ -96,7 +109,6 @@ p{
     box-sizing: border-box;
     border: 2px solid rgba(0, 0, 0, 0.02);
     text-align: center;
-    font-family: 'Ubuntu', sans-serif;
 }
 
 form.form1 {
@@ -122,7 +134,11 @@ form.form1 > *{
 }
 
 .submit:disabled{
-    opacity: 0.4;
+    cursor: not-allowed;
+    opacity: 1 !important;
+    background: #eee !important;
+    color: rgba(0, 0, 0, 0.37);
+    border-color: #ddd !important;
 }
 
 .submit:active{
@@ -136,11 +152,11 @@ a {
 }
 
 .error{
-    border: 1px solid red
+    border: 5px solid red
 }
 
 .agreed{
-    border: 2px solid green
+    border: 5px solid green
 }
 
 </style>

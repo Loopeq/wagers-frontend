@@ -18,7 +18,6 @@
             <div class="box-row no-margin header">
                     <p class="ghost">Всего: {{ matches.length }}</p>
             </div>
-            <hr />
             <div class='loader-wrapper' v-if="loading.matches" style="width: 100%; height: 200px;">
                 <span class="loader"></span>
             </div>
