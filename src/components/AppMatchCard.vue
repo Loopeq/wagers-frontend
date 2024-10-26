@@ -1,20 +1,20 @@
 <template>
-<div class="card" :class="match.match_id === selectedId ? 'marked-box' : ''">
-  <hr />
-  <div class='box-row hovered' @click="$emit('onClick', match.id)" style="justify-content: space-between;">
-    <div class="box-column head">
-      <h3 class="ellipsis">{{ match.home_name }}</h3>
-      <h3 class="ellipsis">{{ match.away_name }}</h3>
-      <p class="ellipsis">{{ match.league_name }}</p>
-      <div class="box-row nomrg">
+<hr />
+<div class="card hovered" :class="match.match_id === selectedId ? 'marked-box' : ''">
+  <div class='box-row' @click="$emit('onClick', match.id)" style="justify-content: space-between;">
+    <div class="box-column">
+      <h3>{{ match.home_name }}</h3>
+      <h3>{{ match.away_name }}</h3>
+      <p>{{ match.league_name }}</p>
+      <div class="box-row nomrg" style="width: fit-content;">
         <p class="ellipsis ghost" style="padding-right: 8px;">{{ justify_date(match.start_time) }}</p>
         <p class="ghost timestamp">{{ calculateTimestamp(match.start_time)}}</p>
       </div>
     </div>
     
-    <div class="box-row right" style="width: 300px; justify-content: right;">
-        <div class='fixed-200' v-if='match.change_count'>
-          <h2 style="padding:8px; text-align: center;">{{ match.change_count }}</h2>
+    <div class="box-row right" style="justify-content: right;">
+        <div v-if='match.change_count' style="padding-right: 15px;">
+          <h2 style="padding: 8px; text-align: center;">{{ match.change_count }}</h2>
           <p class='timestamp' style="padding:8px; text-align: center;">{{calculateTimestampChange(match.last_change_time)}}</p>
         </div>
         <span @click.stop='$emit("onNavigate", match.match_id)' class="material-symbols-outlined" style='padding-right: 8px;'>open_in_new</span>
@@ -120,14 +120,11 @@ export default {
   border: 3px solid rgba(255, 60, 0, 1);
 }
 
-
-.card{
-  border: 2px solid white
+.card.hovered{
+  border: 2px solid transparent
 }
-
-.marked-box{
+.card.marked-box{
   border: 2px solid rgba(255, 60, 0, 1);
-  
 }
 
 

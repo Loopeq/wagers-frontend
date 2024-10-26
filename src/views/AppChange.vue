@@ -4,9 +4,11 @@
         <span class="loader"></span>
     </div>
 
-    <div v-if="!loading.change">
-        <div>
-            <AppChangeMatch :match='match' /> 
+    <div :class="blank ? '' : 'scrollable'" style="position: relative;" v-if="!loading.change">
+        <div :class="blank ? '' : 'sticable'">
+            <div>
+                <AppChangeMatch :match='match' />
+            </div> 
             <AppChangeInitial :initial="initial"></AppChangeInitial>
             <AppChangeChanges :startTime='match.start_time' :changes="changes"/>
             <AppChangeHistory 
@@ -25,7 +27,10 @@ import AppChangeInitial from '@/components/AppChangeComponents/AppChangeInitial.
 import AppChangeHistory from '@/components/AppChangeComponents/AppChangeHistory.vue';
     export default {
 
-        props: ['matchIdProp'], 
+        props: {
+            matchIdProp: Number,
+            blank: {type: Boolean, required: false, default: true} 
+        }, 
 
         data(){
             return{
@@ -129,7 +134,14 @@ import AppChangeHistory from '@/components/AppChangeComponents/AppChangeHistory.
     border: 3px solid gray;
 }
 
+.scrollable{
+    height: calc(100vh - 100px); 
+    overflow-y: auto;
+}
 
+.sticable{
+    position: sticky; top: 0px; z-index: 10;
+}
  
 
 </style>

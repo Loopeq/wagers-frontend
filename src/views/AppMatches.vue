@@ -7,38 +7,34 @@
     <div v-if="!loading.filters">
         <MatchFilters class='mb-10' :timeFilters="timeFilters" :valueFilters="valueFilters"/>
     </div>
-
+    
     <div v-else class="loader-wrapper" style="height: 100px;">
         <div class="loader"></div>
     </div>
-    
-    <div class="box-row">
-        <div class="box-column no-margin" style="margin-bottom: auto; width: 40%; position: relative;">
-            <div class="card card-header"><p class="bold">Матчи</p></div>
-            <div class="box-row no-margin header">
-                    <p class="ghost">Всего: {{ matches.length }}</p>
-            </div>
-            <div class='loader-wrapper' v-if="loading.matches" style="width: 100%; height: 200px;">
-                <span class="loader"></span>
-            </div>
-            <div v-else-if="!loading.matches && matches.length">
-                <AppMatchCard 
-                    v-for='match in matches'                 
-                    :match="match"
-                    :key="match.match_id"
-                    :selectedId="selectedMatchId"
-                    @onClick="onClick(match.match_id)"
-                    @on-navigate="onNavigate"
-                ></AppMatchCard>
-                </div>
-            <div v-else>
-                <AppAlert :alert="{type: 'warning', title: 'Не найдено матчей по заданным фильтрам'}"/>
-            </div>
 
+    <div class="box-row">
+        <div class="box-column no-margin" style="width: 30%; height: calc(100vh - 100px); overflow-y: hidden; justify-content: flex-start;">
+                <div class="card card-header"><p class="bold">Матчи</p></div>
+                <div class="box-row no-margin header"><p class="ghost">Всего: {{ matches.length }}</p></div>
+                <div class='loader-wrapper' v-if="loading.matches" style="width: 100%; height: 200px;"><span class="loader"></span></div>
+                <div v-else-if="!loading.matches && matches.length" style="overflow-y: scroll;">
+                            <AppMatchCard 
+                                v-for='match in matches'                 
+                                :match="match"
+                                :key="match.match_id"
+                                :selectedId="selectedMatchId"
+                                @onClick="onClick(match.match_id)"
+                                @on-navigate="onNavigate"
+                            ></AppMatchCard>
+                </div>
+            
+                <div v-else>
+                    <AppAlert :alert="{type: 'warning', title: 'Не найдено матчей по заданным фильтрам'}"/>
+                </div>
         </div>
 
-        <div style=" width: 60%; margin-bottom: auto; padding-left: 10px; position: -webkit-sticky; position: sticky; top: 10px;">
-            <AppChange :matchIdProp="selectedMatchId"/>
+        <div style=" width: 70%; margin-bottom: auto; padding-left: 10px; position: -webkit-sticky; position: sticky; top: 10px; overflow-y: hidden;">
+            <AppChange :matchIdProp="selectedMatchId" :blank="false"/>
         </div>
         
     </div>
