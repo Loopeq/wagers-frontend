@@ -13,7 +13,7 @@
     </div>
     
     <div class="box-row right" style="justify-content: right;">
-        <div v-if='match.change_count' style="padding-right: 15px;">
+        <div v-if='match.change_count' style="padding-right: 15px; width: 100px;">
           <h2 style="padding: 8px; text-align: center;">{{ match.change_count }}</h2>
           <p class='timestamp' style="padding:8px; text-align: center;">{{calculateTimestampChange(match.last_change_time)}}</p>
         </div>
@@ -84,7 +84,7 @@ export default {
                     const diff = diffInMinutes.toFixed(0);
                     
                     if (diffInMinutes <= 60){
-                      return `${diff} мин. назад`
+                      return `${diff} мин.`
                     }
                     else { 
                       return this.justify_date(created_at)
