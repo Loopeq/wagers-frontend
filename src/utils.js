@@ -7,7 +7,7 @@ export function format_period(period, type) {
     )
     let prefix = ' Игра'
     if (period === 3 || period === 4){
-        prefix = String(period) + ' Четверть'
+        prefix = String(period - 2) + ' Четверть'
     }
     else if (period !== 0){ 
         prefix = String(period) + " Тайм"
