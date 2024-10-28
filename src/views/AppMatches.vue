@@ -23,7 +23,7 @@
                                 :match="match"
                                 :key="match.match_id"
                                 :selectedId="selectedMatchId"
-                                @onClick="onClick(match.match_id)"
+                                @onClick="onMatchClick(match.match_id)"
                                 @on-navigate="onNavigate"
                             ></AppMatchCard>
                 </div>
@@ -88,16 +88,22 @@ import AppChange from './AppChange.vue';
 
         methods: {
             async fetchMatches(){ 
+                
                 this.loading.matches = true
+                if (this.matchesInterval){
+                    clearInterval(this.matchesInterval)
+                    this.matchesInterval = null 
+                }
+
                 const request = async() => { 
                     await this.axios
                     .get(this.$hostname + '/', 
                         {params: 
                         {
-                        hour: this.currentTimeFilter.hour, 
-                        finished: this.currentTimeFilter.finished,
-                        filter: this.currentValueFilter.type,
-                        not_null_point: this.currentNotNullPointFilter
+                            hour: this.currentTimeFilter.hour, 
+                            finished: this.currentTimeFilter.finished,
+                            filter: this.currentValueFilter.type,
+                            not_null_point: this.currentNotNullPointFilter
                         }, 
                         withCredentials: true
                         })
@@ -112,7 +118,9 @@ import AppChange from './AppChange.vue';
                 }
 
                 await request();
-                if (!this.matchesInterval){
+                
+
+                if (this.currentTimeFilter.finished === null){
                    this.matchesInterval = setInterval(request, 20000)
                 }
             },
@@ -129,7 +137,7 @@ import AppChange from './AppChange.vue';
                     .finally(() => {})
             }, 
 
-            onClick(matchId){ 
+            onMatchClick(matchId){ 
                 this.selectedMatchId = matchId
             }, 
 

@@ -32,7 +32,7 @@ import { format_date, format_period } from '../utils'
 import moment from 'moment';
 
 export default {
-    emits: ['onNavigate'],
+    emits: ['onNavigate', 'onClick'],
     props: ['match', 'selectedId'],
 
 
