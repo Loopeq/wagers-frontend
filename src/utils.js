@@ -5,16 +5,14 @@ export function format_period(period, type) {
         /\w\S*/g,
         text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
     )
-    if (period == 3 || period == 4){
-        let prefix = String(period) + ' Четверть'
+    let prefix = ' Игра'
+    if (period === 3 || period === 4){
+        prefix = String(period) + ' Четверть'
     }
     else if (period !== 0){ 
-        let prefix = String(period) + " Тайм"
+        prefix = String(period) + " Тайм"
     }
-    else {
-        let prefix = ' Игра'
-    }
-    
+
     let result = temp + " - " + prefix
     return result
 }
