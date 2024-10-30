@@ -31,12 +31,13 @@ router.beforeEach( async (to, from, next) => {
     }
 
     if (to.meta.requiresAuth) {
+        
+        if (isAuthenticated) {
+            next();
+            return;
+        }
+
         try {
-          
-            if (isAuthenticated) {
-                next();
-                return;
-            }
             await axios.get(`/auth/check`, {withCredentials: true});
             isAuthenticated = true; 
             next(); 

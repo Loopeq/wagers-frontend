@@ -3,6 +3,7 @@
     <div class="card card-header">
         <div class="box-row">
         <p class="bold">Матч</p>
+        <a class='link' :href="match.link" target="_blank" style="margin-left: auto"><p>Pinnacle link</p></a>
         <p class="bold" style="margin-left: auto; user-select: all;">id: {{ match.match_id }}</p>
         </div>
     </div>
@@ -34,4 +35,9 @@ import { format_date } from '@/utils';
 </script>
 
 <style scoped>
+
+.link{
+    text-decoration: underline;
+    color: white;
+}
 </style>
