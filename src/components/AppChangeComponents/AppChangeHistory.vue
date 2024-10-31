@@ -34,14 +34,15 @@
                         <h3 class="ellipsis">{{ match.home_name }}</h3>
                         <h3 class="ellipsis">{{ match.away_name }}</h3>
                         <p class="ellipsis">{{ match.league_name }}</p>
-                        <p class="ellipsis ghost">{{ justify_date(match.start_time) }}</p>
+                        <p class="ellipsis ghost">{{ justify_date(match.start_time) }} [Игра завершена]</p>
                     </div>
 
                     <div v-if="match.details">
-                        <div class="box-row no-mrg abs-center" v-for="(change, idx) in match.details" :key="idx">
-                            <h2 style="padding-right: 4px;">{{ change.team_1_score }}</h2>
+                        <div class="box-row no-mrg abs-center">
+                            <h2 class="ghost">Результат:</h2>&nbsp;&nbsp;
+                            <h2 style="padding-right: 4px;">{{ match.details.team_1_score }}</h2>
                             <p>-</p>
-                            <h2 style="padding-left: 4px">{{ change.team_2_score }}</h2>
+                            <h2 style="padding-left: 4px">{{ match.details.team_2_score }}</h2>
                         </div>
                     </div>
                 </div>
@@ -167,7 +168,7 @@ import { format_date } from '@/utils';
 .abs-center{
     position: absolute;
     top: 40%;
-    left: 50%;
+    left: 45%;
     transition: (50%, 50%);
 }
 </style>

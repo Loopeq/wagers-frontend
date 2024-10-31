@@ -30,6 +30,7 @@ router.beforeEach( async (to, from, next) => {
         return;
     }
 
+
     if (to.meta.requiresAuth) {
         
         if (isAuthenticated) {
