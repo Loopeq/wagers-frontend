@@ -6,7 +6,7 @@ export function format_period(period, type) {
         text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
     )
     let prefix = ' Игра'
-    if (period === 3 || period === 4){
+    if (period === 3 || period === 4 || period == 5 || period == 6){
         prefix = String(period - 2) + ' Четверть'
     }
     else if (period !== 0){ 
