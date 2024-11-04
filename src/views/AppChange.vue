@@ -13,7 +13,9 @@
             <AppChangeChanges :startTime='match.start_time' :changes="changes"/>
             <AppChangeHistory 
                 :matchId = matchId
-                :teams="{homeId: match.home_id, homeName: match.home_name, awayId: match.away_id, awayName: match.away_name}"
+                :teams="{homeId: match.home_id, homeName: match.home_name, awayId: match.away_id, awayName: match.away_name,
+                    leagueId: match.league_id
+                }"
                 />
         </div>
     </div>

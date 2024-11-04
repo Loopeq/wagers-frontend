@@ -104,7 +104,9 @@ import { format_date } from '@/utils';
                         withCredentials: true, 
                         params: {
                             team_name: this.teams.homeName, 
-                            current_match_id: this.matchId}
+                            current_match_id: this.matchId,
+                            league_id: this.teams.leagueId},
+                
                         })
                     .then(response => {
                         this.homeHistory = response.data
@@ -116,7 +118,8 @@ import { format_date } from '@/utils';
                         withCredentials: true, 
                         params: {
                             team_name: this.teams.awayName, 
-                            current_match_id: this.matchId
+                            current_match_id: this.matchId,
+                            league_id: this.teams.leagueId, 
                         }
                         })
                     .then(response => {

@@ -81,7 +81,7 @@ import moment from 'moment';
                 return format_date(date) 
             }, 
 
-            point_diff(oldPoint, newPoint){ 
+            point_diff(oldPoint, newPoint){
                 let diff = (oldPoint - newPoint).toFixed(2)
                 if (diff < 0){ return `(+${-diff})`}
                     return `(-${diff})`
