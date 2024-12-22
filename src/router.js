@@ -8,7 +8,7 @@ import axios from 'axios'
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        {path: '/login', alias:"/", component: AppLogin}, 
+        {path: '/login', alias:"/", component: AppLogin, meta: {requiresAuth: false}}, 
         {path: '/matches', component: AppMatches, meta: { requiresAuth: true }},
         {
             path: '/match/:matchId',
@@ -25,23 +25,30 @@ let isAuthenticated = false;
 
 router.beforeEach( async (to, from, next) => {
 
-    if (to.path === '/login') {
-        next();
+    if (to.path === '/') {
+        try{
+            await axios.get(`/auth/check`, { withCredentials: true });
+            isAuthenticated = true;
+            console.log(isAuthenticated)
+            next('matches');
+        } catch (error){
+            console.log(error)
+            isAuthenticated = false; 
+            next('login');
+        }
         return;
     }
 
-
     if (to.meta.requiresAuth) {
-        
         if (isAuthenticated) {
             next();
             return;
         }
 
         try {
-            await axios.get(`/auth/check`, {withCredentials: true});
+            await axios.get(`/auth/check`, { withCredentials: true });
             isAuthenticated = true; 
-            next(); 
+            next();
         } catch (error) {
             isAuthenticated = false; 
             next('/login');
@@ -49,6 +56,7 @@ router.beforeEach( async (to, from, next) => {
     } else {
         next();
     }
+
 })
 
 export default router
