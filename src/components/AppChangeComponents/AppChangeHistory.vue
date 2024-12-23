@@ -30,19 +30,29 @@
         <div v-if="history.length" class="mb-10">
             <div class="box-column nomrg" v-for="(match, idx) in history" :key="idx">
                 <div @click='onTeamClick(match.match_id)' class="box-row hovered head nomrg" style="padding: 10px">
-                    <div class="box-column nomrg">
+                    <div class="box-column nomrg" style="flex: 1">
                         <h3 class="ellipsis">{{ match.home_name }}</h3>
                         <h3 class="ellipsis">{{ match.away_name }}</h3>
                         <p class="ellipsis">{{ match.league_name }}</p>
                         <p class="ellipsis ghost">{{ justify_date(match.start_time) }} [Игра завершена]</p>
                     </div>
 
-                    <div v-if="match.details">
-                        <div class="box-row no-mrg abs-center">
-                            <h2 class="ghost">Результат:</h2>&nbsp;&nbsp;
-                            <h2 style="padding-right: 4px;">{{ match.details.team_1_score }}</h2>
-                            <p>-</p>
-                            <h2 style="padding-left: 4px">{{ match.details.team_2_score }}</h2>
+                    <div v-if="match.details" style="flex: 3">
+                        <div class="box-row no-mrg" style="justify-content: space-around;">
+                            <div class="box-row mo-mrg" style="flex: 1; justify-content: center;">
+                                <h2 class="ghost">Результат:</h2>&nbsp;&nbsp;
+                                <h2 style="padding-right: 4px;">{{ match.details.team_1_score }}</h2>
+                                <p>-</p>
+                                <h2 style="padding-left: 4px">{{ match.details.team_2_score }}</h2>
+                            </div>            
+
+                            <div v-if='match.high.max_score' class="box-row mo-mrg pdl-15" style="flex: 1; justify-content: center;">
+                                <div class="box-column no-mrg">
+                                    <p class="ghost">{{ justify_period(match.high.max_score.period, match.high.max_score.type ) }}</p>
+                                    <h2>{{ match.high.max_score.old }} -> {{ match.high.max_score.new}} {{ point_diff(match.high.max_score.old, match.high.max_score.new) }}</h2>
+                                </div>
+                                <h2 v-if='match.high.count - 1 >= 1' class="ghost"> и ещё <span style="color: #FF3D00">{{ match.high.count }}</span> сильных изменений</h2>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -61,7 +71,8 @@
 
 <script>
 import AppAlert from '../AppAlert.vue';
-import { format_date } from '@/utils';
+import { format_date, format_period, point_diff } from '@/utils';
+
 
     export default {
         props: ['teams', 'matchId'],
@@ -88,6 +99,7 @@ import { format_date } from '@/utils';
                 } else {
                     this.history = this.awayHistory
                 }
+                console.log(this.history);
             },
 
             onTeamClick(matchId){
@@ -98,6 +110,15 @@ import { format_date } from '@/utils';
             justify_date(date){
                 return format_date(date)
             }, 
+
+            justify_period(period, type){
+                return format_period(period, type);
+            },
+
+            point_diff(oldPoint, newPoint){
+                return point_diff(oldPoint, newPoint);
+            }, 
+
             async fetchHistory(){ 
                 await this.axios
                     .get(this.$hostname + '/history',  {
@@ -106,7 +127,6 @@ import { format_date } from '@/utils';
                             team_name: this.teams.homeName, 
                             current_match_id: this.matchId,
                             league_id: this.teams.leagueId},
-                
                         })
                     .then(response => {
                         this.homeHistory = response.data
@@ -168,10 +188,9 @@ import { format_date } from '@/utils';
     position: relative;
 }
 
-.abs-center{
-    position: absolute;
-    top: 40%;
-    left: 45%;
-    transition: (50%, 50%);
+.evenly{
+    width: 100%;
+    justify-content: space-around;
 }
+
 </style>

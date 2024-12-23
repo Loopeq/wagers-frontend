@@ -230,6 +230,10 @@ p{
     padding-left: 5px; 
 }
 
+.pdl-15{
+    padding-left: 15px;
+}
+
 .ghost{
     font-weight: 500;
     color: hsla(0, 0%, 0%, 0.55)

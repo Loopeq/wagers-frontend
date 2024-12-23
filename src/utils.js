@@ -55,3 +55,9 @@ export function format_date(date) {
     }
 
 }
+
+export function point_diff(oldPoint, newPoint){
+    let diff = (oldPoint - newPoint).toFixed(2)
+    if (diff < 0){ return `(+${-diff})`}
+        return `(-${diff})`
+}

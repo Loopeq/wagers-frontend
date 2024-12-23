@@ -28,7 +28,7 @@
                 <p v-if='calculateTimestamp(change.created_at)'
                         :class="calculateTimestamp(change.created_at).style"
                         style="width: 50px; text-align: center; padding-right: 5px;">
-                        {{ calculateTimestamp(change.created_at).minutes }} мин.    
+                        {{ calculateTimestamp(change.created_at).minutes }}    
                 </p>
                 <p v-else style="width: 50px"></p>
                 <div class="box-row box-item" style="justify-content: center; padding: 7px 0px;">
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { format_period, format_date } from '@/utils'
+import { format_period, format_date, point_diff } from '@/utils'
 import moment from 'moment';
 
     export default {
@@ -82,9 +82,7 @@ import moment from 'moment';
             }, 
 
             point_diff(oldPoint, newPoint){
-                let diff = (oldPoint - newPoint).toFixed(2)
-                if (diff < 0){ return `(+${-diff})`}
-                    return `(-${diff})`
+                return point_diff(oldPoint, newPoint);
             },
 
             calculateTimestamp(created_at){
@@ -99,19 +97,25 @@ import moment from 'moment';
                     
                     if (diffInMinutes > 30){
                         return {
-                            minutes: diff,
+                            minutes: `${diff} мин.`,
                             style: 'low'
                         }
                     } 
                     else if (diffInMinutes >= 10){
                         return {
-                            minutes: diff,
+                            minutes: `${diff} мин.`,
                             style: 'medium'
+                        }
+                    }
+                    else if (diffInMinutes <= 2){
+                        return {
+                            minutes: 'Now',
+                            style: 'high'
                         }
                     }
                     else if (diffInMinutes < 10){
                         return {
-                            minutes: diff,
+                            minutes: `${diff} мин.`,
                             style: 'high'
                         }
                     }

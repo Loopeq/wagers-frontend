@@ -9,7 +9,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         {path: '/login', alias:"/", component: AppLogin, meta: {requiresAuth: false}}, 
-        {path: '/matches', component: AppMatches, meta: { requiresAuth: true }},
+        {path: '/matches', component: AppMatches, meta: { requiresAuth: true}},
         {
             path: '/match/:matchId',
             name: 'match',
@@ -23,8 +23,7 @@ const router = createRouter({
 
 let isAuthenticated = false; 
 
-router.beforeEach( async (to, from, next) => {
-
+router.beforeEach( async (to, _, next) => {
     if (to.path === '/') {
         try{
             await axios.get(`/auth/check`, { withCredentials: true });

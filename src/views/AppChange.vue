@@ -1,5 +1,4 @@
 <template>
-
     <div class='loader-wrapper card' v-if="loading.change" style="width: 100%; height: 200px;">
         <span class="loader"></span>
     </div>

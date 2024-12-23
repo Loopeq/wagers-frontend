@@ -6,7 +6,6 @@ import router from './router'
 import './theme.css' 
 
 const app = createApp(App)
-console.log(process.env.VUE_APP_API_URL)
 app.config.globalProperties.$hostname = process.env.VUE_APP_API_URL
 axios.defaults.baseURL = app.config.globalProperties.$hostname
 app.use(VueAxios, axios)

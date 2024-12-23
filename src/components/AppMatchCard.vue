@@ -83,7 +83,10 @@ export default {
 
                     const diff = diffInMinutes.toFixed(0);
                     
-                    if (diffInMinutes <= 60){
+                    if (diffInMinutes < 2){ 
+                      return 'Сейчас';
+                    }
+                    else if (diffInMinutes <= 60){
                       return `${diff} мин.`
                     }
                     else { 
