@@ -30,23 +30,25 @@
         <div v-if="history.length" class="mb-10">
             <div class="box-column nomrg" v-for="(match, idx) in history" :key="idx">
                 <div @click='onTeamClick(match.match_id)' class="box-row hovered head nomrg" style="padding: 10px">
-                    <div class="box-column nomrg" style="flex: 1">
+                    <div class="box-column nomrg">
                         <h3 class="ellipsis">{{ match.home_name }}</h3>
                         <h3 class="ellipsis">{{ match.away_name }}</h3>
                         <p class="ellipsis">{{ match.league_name }}</p>
                         <p class="ellipsis ghost">{{ justify_date(match.start_time) }} [Игра завершена]</p>
                     </div>
 
-                    <div v-if="match.details" style="flex: 3">
-                        <div class="box-row no-mrg" style="justify-content: space-around;">
-                            <div class="box-row mo-mrg" style="flex: 1; justify-content: center;">
-                                <h2 class="ghost">Результат:</h2>&nbsp;&nbsp;
-                                <h2 style="padding-right: 4px;">{{ match.details.team_1_score }}</h2>
-                                <p>-</p>
-                                <h2 style="padding-left: 4px">{{ match.details.team_2_score }}</h2>
-                            </div>            
+                    <div v-if="match.details" class="no-mrg">
+                        <div class="box-row no-mrg" style="justify-content: space-around">
+                            <div class="box-column no-mrg pdl-15" style="justify-content: flex-start; width: 100px">
+                                    <p class="ghost">Результат</p>
+                                    <div class="box-row no-mrg">
+                                        <h2 style="padding-right: 4px;">{{ match.details.team_1_score }}</h2>
+                                        <p>-</p>
+                                        <h2 style="padding-left: 4px">{{ match.details.team_2_score }}</h2>
+                                </div>
+                            </div>
 
-                            <div v-if='match.high.max_score' class="box-row mo-mrg pdl-15" style="flex: 1; justify-content: center;">
+                            <div v-if='match.high.max_score' class="box-row mo-mrg pdl-15" style="justify-content: flex-start; width: 400px;">
                                 <div class="box-column no-mrg">
                                     <p class="ghost">{{ justify_period(match.high.max_score.period, match.high.max_score.type ) }}</p>
                                     <h2>{{ match.high.max_score.old }} -> {{ match.high.max_score.new}} {{ point_diff(match.high.max_score.old, match.high.max_score.new) }}</h2>
