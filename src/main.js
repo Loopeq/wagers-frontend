@@ -1,13 +1,15 @@
 import { createApp } from 'vue'
-import App from './AppBase.vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+import { createPinia } from 'pinia'
+import AppBase from './AppBase.vue'
 import router from './router'
-import './theme.css' 
-
-const app = createApp(App)
-app.config.globalProperties.$hostname = process.env.VUE_APP_API_URL
-axios.defaults.baseURL = app.config.globalProperties.$hostname
-app.use(VueAxios, axios)
-app.use(router)
-app.mount('#app')
+import './theme.css'
+import dateUtils from '@/plugins/dateUtils';
+import betUtils from '@/plugins/betUtils'
+const req = require.context(
+    '@/assets/icons', 
+    true,             
+    /\.svg$/          
+  )
+  
+  req.keys().forEach(req)
+createApp(AppBase).use(createPinia()).use(router).use(dateUtils).use(betUtils).mount('#app')
