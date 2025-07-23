@@ -35,7 +35,9 @@ module.exports = defineConfig({
       .use('svg-sprite-loader')
       .loader('svg-sprite-loader')
       .options({
-        symbolId: 'icon-[name]'
+        symbolId: 'icon-[name]',
+        extract: process.env.NODE_ENV === 'production',
+        spriteFilename: 'img/icons.svg'
       });
   }
 });
