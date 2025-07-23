@@ -14,11 +14,11 @@ module.exports = defineConfig({
         /*
          * @see https://github.com/kisenka/svg-sprite-loader#configuration
          */
-        // loaderOptions: {
-        //     extract: process.env.NODE_ENV === 'production', // true только в production  
-        //     spriteFilename: 'img/icons.svg', // or 'img/icons.svg' if filenameHashing == false
-        //     symbolId: 'icon-[name]'
-        // },
+        loaderOptions: {
+            extract: process.env.NODE_ENV === 'production', // true только в production  
+            spriteFilename: 'img/icons.svg', // or 'img/icons.svg' if filenameHashing == false
+            symbolId: 'icon-[name]'
+        },
         /*
          * @see https://github.com/kisenka/svg-sprite-loader#configuration
          */
