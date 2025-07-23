@@ -1,34 +1,16 @@
+const path = require('path');
 const { defineConfig } = require('@vue/cli-service');
+
 module.exports = defineConfig({
   transpileDependencies: true,
-  pluginOptions: {
-    svgSprite: {
-        /*
-         * The directory containing your SVG files.
-         */
-        dir: 'src/assets/icons',
-        /*
-         * The regex that will be used for the Webpack rule.
-         */
-        test: /\.(svg)(\?.*)?$/,
-        /*
-         * @see https://github.com/kisenka/svg-sprite-loader#configuration
-         */
-        loaderOptions: {
-            spriteFilename: 'img/icons.svg',
-            symbolId: 'icon-[name]'
-        },
-        /*
-         * @see https://github.com/kisenka/svg-sprite-loader#configuration
-         */
-        pluginOptions: {
-            plainSprite: true
-        }    
-    }    
-  },   
   chainWebpack: config => {
+    config.module.rules.delete('svg');
+
     config.module
       .rule('svg-sprite')
+      .test(/\.svg$/)
+      .include.add(path.resolve(__dirname, 'src/assets/icons'))
+      .end()
       .use('svgo-loader')
       .loader('svgo-loader')
       .options({
@@ -37,17 +19,23 @@ module.exports = defineConfig({
             name: 'preset-default',
             params: {
               overrides: {
-                removeViewBox: false // Сохраняем viewBox
+                removeViewBox: false // сохраняем viewBox
               }
             }
           },
           {
             name: 'removeAttrs',
             params: {
-              attrs: '(fill|stroke|stroke-width)' // Удаляем эти атрибуты
+              attrs: '(fill|stroke|stroke-width)' // удаляем эти атрибуты
             }
           }
         ]
       })
+      .end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: 'icon-[name]'
+      });
   }
-})
+});
