@@ -74,9 +74,9 @@ export const threshhold = {
 export const sorts = [
     {id: 0, name: 'По названию команды', code: 'team_name', order: 'asc'},
     {id: 1, name: 'По названию лиги', code: 'league_name', order: 'asc'},
-    {id: 2, name: 'По времени движения', code: 'last_change', order: 'asc'},
+    {id: 2, name: 'По времени движения', code: 'last_change', order: 'desc'},
     {id: 3, name: 'По кол-ву движений', code: 'change_count', order: 'desc'},
-    {id: 4, name: 'По времени начала матча', code: 'start_time', order: 'desc'},
+    {id: 4, name: 'По времени начала матча', code: 'start_time', order: 'asc'},
 ]
 // export const orders = [
 //     {id: 1, name: 'По убыванию', code: 'desc'},
