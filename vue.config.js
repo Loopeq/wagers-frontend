@@ -15,29 +15,9 @@ module.exports = defineConfig({
         .loader('svg-sprite-loader')
         .options({
           symbolId: 'icon-[name]',
-          extract: process.env.NODE_ENV === 'production',
+          extract: false,
           spriteFilename: 'img/icons.svg'
         })
         .end()
-        .use('svgo-loader')
-        .loader('svgo-loader')
-        .options({
-          plugins: [
-            {
-              name: 'preset-default',
-              params: {
-                overrides: {
-                  removeViewBox: false
-                }
-              }
-            },
-            {
-              name: 'removeAttrs',
-              params: {
-                attrs: '(fill|stroke|stroke-width)'
-              }
-            }
-          ]
-        });
   }
 });
