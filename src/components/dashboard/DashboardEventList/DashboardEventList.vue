@@ -1,7 +1,8 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, computed } from 'vue';
 import { useBetStore } from '@/store/bet.module';
 import DashboardEvent from './DashboardEvent.vue';
+import { perPage } from '@/constants';
 
 defineProps({
   eventList: Array,
@@ -12,6 +13,14 @@ const betStore = useBetStore();
 const onEventClick = (event) => {
     betStore.selectedEventId = event.id;
 }
+const onPagination = () => { 
+    betStore.onPaginationFlag = !betStore.onPaginationFlag;
+}
+
+const canPaginate = computed(() => {
+    const currentSportId = betStore.relatedParams.sport_id;
+    return betStore.eventsCountMap[currentSportId] > perPage * betStore.page + perPage;
+})
 </script>
 
 <template>
@@ -25,10 +34,21 @@ const onEventClick = (event) => {
         >   
             <DashboardEvent :event="event"/>
         </div>
+        <div v-if="canPaginate" @click="onPagination" class="event-list-pagination">Показать ещё</div>
     </div>
 </template>
 
 <style scoped lang="scss">
+.event-list-pagination{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 100%;
+    font-size: 12px;
+    color: var(--black-olive-75);
+    cursor: pointer;
+}
 .event-list{
     display: flex;
     flex-direction: column;

@@ -78,6 +78,8 @@ export const sorts = [
     {id: 3, name: 'По кол-ву движений', code: 'change_count', order: 'desc'},
     {id: 4, name: 'По времени начала матча', code: 'start_time', order: 'asc'},
 ]
+
+export const perPage = 50;
 // export const orders = [
 //     {id: 1, name: 'По убыванию', code: 'desc'},
 //     {id: 2, name: 'По возрастанию', code: 'asc'},

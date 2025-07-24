@@ -3,35 +3,42 @@ import DashboardEventColumn from '@/components/dashboard/DashboardEventColumn.vu
 import DashboardCanvas from '@/components/dashboard/DashboardCanvas.vue';
 import { useBetStore } from '@/store/bet.module';
 import {onMounted, watch, onBeforeUnmount} from 'vue';
+import { perPage } from '@/constants';
 
 let relatedInterval = null;
 let straightInterval = null;
 
-const betStore = useBetStore(); 
-onMounted( async () => {
-    await betStore.getRelated(betStore.relatedParams);
-    await betStore.getSports();
-    if (betStore.events.length){
-        betStore.selectedEventId = betStore.events[0].id; 
-    }
-
-    relatedInterval = setInterval(async() => {
-        await betStore.getRelated(betStore.relatedParams);
-    }, 10_000)
-})
-// Тригер изменения фильтров в related
-watch(() => betStore.relatedParams, async (value) => {
-    await betStore.getRelated(value);
+const betStore = useBetStore();
+// Получение related
+const fetchRelated = async(params, offset, limit, expand) => { 
+    await betStore.getRelated({...params, offset: offset, limit: limit}, expand);
 
     if (relatedInterval) clearInterval(relatedInterval);
     relatedInterval = setInterval(async() => {
-        await betStore.getRelated(value);
+        await betStore.getRelated({...params, offset: 0, limit: perPage * betStore.page}, false);
     }, 10_000)
+} 
+onMounted( async () => {
+    await betStore.getSports();
+    await fetchRelated(betStore.relatedParams, 0, perPage, false)
+    if (betStore.events.length){
+        betStore.selectedEventId = betStore.events[0].id; 
+    }
+})
+// Тригер изменения фильтров в related
+watch(() => betStore.relatedParams, async (params) => {
+    betStore.page = 1;
+    await fetchRelated(params, 0, perPage, false)
+}, {deep: true})
+// Тригер при пагинации
+watch(() => betStore.onPaginationFlag, async () => {
+    betStore.page += 1;
+    await fetchRelated(betStore.relatedParams, perPage * betStore.page, perPage, true)
 }, {deep: true})
 // Тригер при изменении выбранного ивента
 watch(() => betStore.selectedEventId, async (eventId) => {
     let currentEvent = betStore.events.find((event) => event.id === eventId);
-    if (!currentEvent) {
+    if (!currentEvent) {    
         currentEvent = [
             ...betStore.eventHistory.home, 
             ...betStore.eventHistory.away

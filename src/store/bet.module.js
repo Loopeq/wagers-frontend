@@ -4,6 +4,8 @@ import api from '@/services/api'
 
 export const useBetStore = defineStore('bet', () => {
     const events = ref([]);
+    const onPaginationFlag = ref(0);
+    const page = ref(1);
     const eventsCount = ref([]);
     const event = ref({});
     const eventChanges = ref([]);
@@ -39,13 +41,17 @@ export const useBetStore = defineStore('bet', () => {
         }
     }
 
-    const getRelated = async (params) => {
+    const getRelated = async (params, expand) => {
         try {
             const response = await api.getWithQuery('/related', {
                 ...params
             })
-            events.value = response?.data.matches;
-            eventsCount.value = response?.data.match_counts;
+            if (expand) {
+                events.value = [...events.value, ...response?.data.matches];
+              } else {
+                events.value = response?.data.matches;
+              }
+              eventsCount.value = response?.data.match_counts;
         } 
         catch (e){
             console.error(e);
@@ -82,6 +88,8 @@ export const useBetStore = defineStore('bet', () => {
         getStraight,
         getSports,
         getHistory,
+        onPaginationFlag,
+        page,
         selectedEventId,
         relatedParams,
         relatedParamsViewMode,
