@@ -22,7 +22,7 @@ export const useBetStore = defineStore('bet', () => {
     })
     const sports = ref([]);
     const relatedParams = ref({
-        sport_id: 33,
+        sport_id: 29,
         league_id: null,
         hours: null,
         finished: false,
