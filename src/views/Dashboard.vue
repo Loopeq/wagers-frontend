@@ -4,6 +4,7 @@ import DashboardCanvas from '@/components/dashboard/DashboardCanvas.vue';
 import { useBetStore } from '@/store/bet.module';
 import {onMounted, watch, onBeforeUnmount} from 'vue';
 import { perPage } from '@/constants';
+import { useHead } from '@vueuse/head';
 
 let relatedInterval = null;
 let straightInterval = null;
@@ -67,6 +68,9 @@ onBeforeUnmount(() => {
   if (straightInterval) clearInterval(straightInterval);
 });
 
+useHead({
+        title: 'Dashboard'
+})
 </script>
 
 <template>

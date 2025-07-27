@@ -31,10 +31,14 @@
 <script setup >
 import { useLoginForm } from '@/use/login-form';
 import UiButton from '@/ui/UiButton/UiButton.vue';
+import { useHead } from '@vueuse/head';
 const {
   username, password,
   onSubmit, isAuthFailed
 } = useLoginForm();
+useHead({
+        title: 'Log in'
+})
 </script>
   
   <style lang="scss" scoped>

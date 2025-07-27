@@ -1,6 +1,5 @@
-import { createRouter, createWebHistory, redirect } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/store/auth.module';
-
 const routes = [
     {
         path: '/',
@@ -12,16 +11,18 @@ const routes = [
         component: () => import('../views/Dashboard.vue'),
         meta: {
             layout: 'main',
-            auth: true
+            auth: true,
+            title: "Dashboard"
         }
-    },
+    },  
     {
         path: '/auth',
         name: 'Auth', 
         component: () => import('../views/Auth.vue'),
         meta: {
             layout: 'auth',
-            auth: false
+            auth: false,
+            title: "Log in"
         }
     },
 ]
@@ -36,7 +37,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const store = useAuthStore();
     if (to === '/'){
-        redirect({'path': '/dashboard'})
+        return next('/dashboard');
     }
     const requiresAuth = to.meta.auth;
 
@@ -48,5 +49,4 @@ router.beforeEach((to, from, next) => {
         next();
     }
 })
-
 export default router
