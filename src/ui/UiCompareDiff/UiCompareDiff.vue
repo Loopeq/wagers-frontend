@@ -1,6 +1,5 @@
 <script setup>
 import { computed, defineProps } from 'vue';
-import UiIcon from '../UiIcon/UiIcon.vue';
 import { threshhold } from '@/constants';
 
 const props = defineProps({
@@ -10,10 +9,6 @@ const props = defineProps({
     type: {
         type: String // coeff | point | limit
     },
-})
-
-const directionClass = computed(() => {
-    return props.diff >= 0 ? 'up' : 'down'
 })
 
 const betShade = computed(() => {
@@ -27,7 +22,6 @@ const betShade = computed(() => {
 <div class="compare-diff">
     <template v-if="diff">
         <span :class="betShade">{{ diff }}</span>
-        <UiIcon class="compare-diff__direction" :class="[directionClass, betShade]" name="arrow"/>
     </template>
     <template v-else>
         <span>-</span>
