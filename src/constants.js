@@ -79,8 +79,10 @@ export const sorts = [
     {id: 4, name: 'По времени начала матча', code: 'start_time', order: 'asc'},
 ]
 
+export const startTime = [
+    {id: 0, name: '1 час', hour: 1},
+    {id: 1, name: '3 часа', hour: 3},
+    {id: 2, name: '12 часов', hour: 12},
+]
+
 export const perPage = 50;
-// export const orders = [
-//     {id: 1, name: 'По убыванию', code: 'desc'},
-//     {id: 2, name: 'По возрастанию', code: 'asc'},
-// ]

@@ -1,5 +1,5 @@
 <script setup>
-import { sorts } from '@/constants';
+import { sorts, startTime } from '@/constants';
 import UiSwitch from '@/ui/UiSwitch/UiSwitch.vue';
 import {ref, watch, onMounted, computed} from 'vue';
 import { useBetStore } from '@/store/bet.module';
@@ -7,6 +7,7 @@ import UiSelect from '@/ui/UiSelect/UiSelect.vue';
 
 const betStore = useBetStore(); 
 const sortId = ref(null);
+const timeId = ref(null);
 const isFilterSelectVisible = ref(false);
 
 onMounted(() => {
@@ -21,6 +22,11 @@ watch(sortId, (value) => {
   }
 });
 
+const setTime = (time) => {
+    timeId.value = time.id;
+    betStore.relatedParams.hours = time.hour;
+}
+
 const setFilter = (type) => {
   if (type === 'all') {
     betStore.relatedParams.finished = null;
@@ -32,7 +38,7 @@ const setFilter = (type) => {
     betStore.relatedParamsViewMode = 'finished';
   } else if (type === 'until') {
     betStore.relatedParams.finished = false;
-    betStore.relatedParams.hours = 1;
+    setTime(startTime[0]);
     betStore.relatedParamsViewMode = 'until';
   }
 };
@@ -68,6 +74,10 @@ const untilSelected = computed(() => betStore.relatedParamsViewMode === 'until')
             <UiSelect v-model="sortId" v-model:isSelectVisible="isFilterSelectVisible" :items="sorts" />
         </div>
     </div>
+
+    <div v-if="untilSelected" class="event-settings__block-time">
+        <span v-for="time in startTime" :key="time.id" @click="setTime(time)" :class="{'selected': timeId === time.id}">{{ time.name }}</span>
+    </div>
     <div class="event-settings__bottom">
         Включать матчи без движений
         <UiSwitch v-model="betStore.relatedParams.nulls"/>
@@ -82,6 +92,31 @@ const untilSelected = computed(() => betStore.relatedParamsViewMode === 'until')
     flex-direction: column;
     gap: 5px;
 
+    &__block-time{
+        display: flex;
+        justify-content: flex-start;
+        text-align: center;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 15px;
+        margin-bottom: 0px;
+        
+        span{
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 5px 10px;
+            outline: 2px solid var(--neutral);
+            user-select: none;
+            &.selected{
+                outline: 2px solid var(--flame);
+            }
+
+            &:hover:not(.selected){
+                outline: 2px solid var(--flame-70);
+            }
+        }
+    }
     &__main{
         display: flex; 
         gap: 5px;
@@ -97,7 +132,7 @@ const untilSelected = computed(() => betStore.relatedParamsViewMode === 'until')
         color: var(--flame);
         padding: 16px;
         border-bottom: 2px solid transparent;
-
+        
         cursor: pointer;
 
         &.selected{
@@ -127,7 +162,7 @@ const untilSelected = computed(() => betStore.relatedParamsViewMode === 'until')
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        margin: 5px 10px;
+        margin: 10px 10px;
         font-size: 12px;
         font-weight: 500;
         background-color: var(--surface);
