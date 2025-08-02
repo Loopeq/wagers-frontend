@@ -4,6 +4,7 @@ import api from '@/services/api'
 
 export const useBetStore = defineStore('bet', () => {
     const events = ref([]);
+    const pagination = ref({});
     const onPaginationFlag = ref(0);
     const page = ref(1);
     const eventsCount = ref([]);
@@ -48,10 +49,11 @@ export const useBetStore = defineStore('bet', () => {
             })
             if (expand) {
                 events.value = [...events.value, ...response?.data.matches];
-              } else {
+                } else {
                 events.value = response?.data.matches;
-              }
-              eventsCount.value = response?.data.match_counts;
+                }
+                eventsCount.value = response?.data.match_counts;
+                pagination.value = response?.data.pagination;
         } 
         catch (e){
             console.error(e);
@@ -88,6 +90,7 @@ export const useBetStore = defineStore('bet', () => {
         getStraight,
         getSports,
         getHistory,
+        pagination,
         onPaginationFlag,
         page,
         selectedEventId,

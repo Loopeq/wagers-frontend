@@ -2,7 +2,6 @@
 import { defineProps, computed } from 'vue';
 import { useBetStore } from '@/store/bet.module';
 import DashboardEvent from './DashboardEvent.vue';
-import { perPage } from '@/constants';
 
 defineProps({
   eventList: Array,
@@ -18,9 +17,8 @@ const onPagination = () => {
 }
 
 const canPaginate = computed(() => {
-    const currentSportId = betStore.relatedParams.sport_id;
-    return betStore.eventsCountMap[currentSportId] > perPage * betStore.page + perPage;
-})
+    return betStore.pagination.pages > betStore.pagination.current_page 
+}) 
 </script>
 
 <template>

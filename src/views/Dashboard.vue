@@ -16,7 +16,7 @@ const fetchRelated = async(params, offset, limit, expand) => {
 
     if (relatedInterval) clearInterval(relatedInterval);
     relatedInterval = setInterval(async() => {
-        await betStore.getRelated({...params, offset: 0, limit: perPage * betStore.page}, false);
+        await betStore.getRelated({...params, offset: 0, limit: perPage * betStore.pagination.current_page}, false);
     }, 10_000)
 } 
 onMounted( async () => {
@@ -28,13 +28,11 @@ onMounted( async () => {
 })
 // Тригер изменения фильтров в related
 watch(() => betStore.relatedParams, async (params) => {
-    betStore.page = 1;
     await fetchRelated(params, 0, perPage, false)
 }, {deep: true})
 // Тригер при пагинации
 watch(() => betStore.onPaginationFlag, async () => {
-    betStore.page += 1;
-    await fetchRelated(betStore.relatedParams, perPage * betStore.page, perPage, true)
+    await fetchRelated(betStore.relatedParams, perPage * betStore.pagination.current_page, perPage, true)
 }, {deep: true})
 // Тригер при изменении выбранного ивента
 watch(() => betStore.selectedEventId, async (eventId) => {
