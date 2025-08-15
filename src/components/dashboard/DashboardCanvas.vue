@@ -10,15 +10,15 @@ import DashboardCanvasMovements from './DashboardCanvasMovements.vue';
         <DashboardCanvasEvent />
         <div class="dashboard-events">
             <div class="dashboard-events-event__col">
-                <div class="dashboard-events-event__label card">Начальная конфигурация</div>
+                <div class="dashboard-events-event__label">Начальная конфигурация</div>
                 <DashboardCanvasComparison />
             </div>
             <div class="dashboard-events-event__col">
-            <div class="dashboard-events-event__label card">Движения</div>
+            <div class="dashboard-events-event__label">Движения</div>
                 <DashboardCanvasMovements />
             </div>
             <div class="dashboard-events-event__col">
-                <div class="dashboard-events-event__label card">История игр</div>
+                <div class="dashboard-events-event__label">История игр</div>
                 <DashboardCanvasHistory />
             </div>
         </div>
@@ -59,10 +59,8 @@ import DashboardCanvasMovements from './DashboardCanvasMovements.vue';
         padding: 20px 30px;
         font-weight: 500;
         font-size: 12px;
-
-        &.card{ 
-            box-shadow: 2px 2px 4px 4px rgba(0, 0, 0, 0.1);
-        }
+        border-radius: var(--border-radius-small);
+        border: 1px solid var(--neutral);
     }
     &__row{
         display: flex;

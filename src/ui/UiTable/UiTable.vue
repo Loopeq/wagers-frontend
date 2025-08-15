@@ -11,6 +11,7 @@ defineProps({
 </script>
 
 <template>
+<div class="bets-table-wrapper">
 <table class="bets-table">
     <thead>
     <tr>
@@ -49,17 +50,22 @@ defineProps({
     </tr>
     </tbody>
 </table>
+</div>
 </template>
 
 <style lang="scss" scoped>
-.bets-table{
+.bets-table-wrapper{
   margin-top: 20px;
-  border-collapse: collapse;
+  border: 1px solid var(--neutral);
   border-radius: var(--border-radius-small);
+}
+.bets-table{
+  overflow: hidden;
+  border-collapse: collapse;
   font-weight: 500;
+  width: 100%;
 
   th, td {
-    border: 1px solid var(--neutral);
     padding: 12px;
     text-align: center;
   }
@@ -75,7 +81,7 @@ defineProps({
   thead {
     font-size: 10px;
     text-transform: uppercase;
-    border-bottom: 2px solid var(--neutral);
+    border-bottom: 1px solid var(--neutral);
     letter-spacing: 5%;
   }
 

@@ -19,6 +19,10 @@ watch(sortId, (value) => {
   if (current) {
     betStore.relatedParams.sort_by = current.code;
     betStore.relatedParams.sort_order = current.order;
+    // Для законченных матчей меняем стандартную сортировку asc => desc;
+    if (current.code === 'start_time' && betStore.relatedParams.finished){
+        betStore.relatedParams.sort_order = 'desc';
+    }
   }
 });
 
