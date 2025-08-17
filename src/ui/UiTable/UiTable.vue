@@ -11,8 +11,8 @@ defineProps({
 </script>
 
 <template>
-<div class="bets-table-wrapper">
-<table class="bets-table">
+<div class="ui-table-wrapper">
+<table class="ui-table">
     <thead>
     <tr>
         <th class="left">Период</th>
@@ -52,46 +52,3 @@ defineProps({
 </table>
 </div>
 </template>
-
-<style lang="scss" scoped>
-.bets-table-wrapper{
-  margin-top: 20px;
-  border: 1px solid var(--neutral);
-  border-radius: var(--border-radius-small);
-}
-.bets-table{
-  overflow: hidden;
-  border-collapse: collapse;
-  font-weight: 500;
-  width: 100%;
-
-  th, td {
-    padding: 12px;
-    text-align: center;
-  }
-
-  tbody tr:nth-child(odd) {
-    background-color: var(--surface-50);
-  }
-  
-  td {
-    font-size: 12px;
-  }
-  
-  thead {
-    font-size: 10px;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--neutral);
-    letter-spacing: 5%;
-  }
-
-  .left{
-    text-align: left;
-  }
-
-  td.time-cell {
-    font-size: 12px;
-    font-style: italic;
-  }
-}
-</style>

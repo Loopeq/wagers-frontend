@@ -8,6 +8,7 @@ import {computed} from 'vue';
 import {useRoute} from 'vue-router';
 import AuthLayout from './layout/AuthLayout.vue';
 import MainLayout from './layout/MainLayout.vue';
+import AdminLayout from './layout/AdminLayout.vue';
 
 export default {
   setup(){
@@ -16,7 +17,7 @@ export default {
       layout: computed(() => route.meta.layout)
     }
   },
-  components: {AuthLayout, MainLayout}
+  components: {AuthLayout, MainLayout, AdminLayout}
 }
 </script> 
 
@@ -68,6 +69,9 @@ body {
   --agree-30: rgba(39, 174, 96, 0.3);
   --agree-15: rgba(39, 174, 96, 0.15);
 
+  --indigo: rgb(75, 0, 130);
+  --indigo-70: rgb(75, 0, 130, 0.7);
+
   --gradient-top: linear-gradient(0deg, var(--base-gradient));
   --gradient-right: linear-gradient(90deg, var(--base-gradient));
   --gradient-bottom: linear-gradient(180deg, var(--base-gradient));
@@ -114,16 +118,9 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input {
-  font-size: inherit !important;
-  &:disabled {
-    font-size: inherit !important;
-  }
-}
 input[type=number] {
   -moz-appearance: textfield;
 }
-
 .card{ 
   border-radius: var(--border-radius-small);
   background-color: white;
@@ -146,5 +143,53 @@ input[type=number] {
 .text-strong-negative{
   color: var(--danger);
   opacity: 1;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: #000 !important; /* цвет текста */
+  transition: background-color 5000s ease-in-out 0s; /* хак чтобы фон не возвращался */
+}
+
+.ui-table-wrapper{
+  margin-top: 20px;
+  border: 1px solid var(--neutral);
+  border-radius: var(--border-radius-small);
+}
+.ui-table{
+  overflow: hidden;
+  border-collapse: collapse;
+  font-weight: 500;
+  width: 100%;
+
+  th, td {
+    padding: 12px;
+    text-align: center;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: var(--surface-50);
+  }
+  
+  td {
+    font-size: 12px;
+  }
+  
+  thead {
+    font-size: 10px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--neutral);
+    letter-spacing: 5%;
+  }
+
+  .left{
+    text-align: left;
+  }
+
+  td.time-cell {
+    font-size: 12px;
+    font-style: italic;
+  }
 }
 </style>

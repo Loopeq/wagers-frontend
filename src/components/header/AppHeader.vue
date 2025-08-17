@@ -1,7 +1,21 @@
 <script setup>
 import UiIcon from '@/ui/UiIcon/UiIcon.vue';
 import { useBetStore } from '@/store/bet.module';
+import UiButton from '@/ui/UiButton/UiButton.vue';
+import {ref} from 'vue';
+import { useAuthStore } from '@/store/auth.module';
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const betStore = useBetStore(); 
+const authStore = useAuthStore();
+const userSettingsVisible = ref(false);
+const onLogout = async () => {
+    await authStore.logout();
+    router.push('/auth?message=login');
+}
+const onAdmin = async () => {
+    router.push('/admin');
+} 
 </script>
 <template>
     <header class="header">
@@ -19,6 +33,27 @@ const betStore = useBetStore();
                         <div class="tool">{{betStore.eventsCountMap[sport.id]}}</div>
                     </div>
                     <span>{{sport.name_ru}}</span>
+                </div>
+                <div class="header__tools-block" 
+                    @mouseleave="userSettingsVisible = false">
+                    <UiIcon class="user-icon" name="settings" 
+                            @mouseover="userSettingsVisible = true"/>
+
+                    <div v-if="userSettingsVisible" 
+                        class="user-dropdown" 
+                        @mouseover="userSettingsVisible = true">
+                        <div class="user-dropdown__information">
+                            <span>{{authStore.user.email}}</span>
+                        </div>
+                        <div class="user-dropdown__actions">
+                            <UiButton v-if="authStore.isAdmin" class="user-dropdown__admin-btn" @click="onAdmin">Админ панель</UiButton>
+                            <div class="user-dropdown__logout">
+                                <UiButton class="user-dropdown__logout-btn" @click="onLogout">Выйти из аккаунта</UiButton>
+                            </div>
+                        </div>
+
+                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -70,6 +105,32 @@ const betStore = useBetStore();
         }
     }
 
+    &__tools-block{
+        display: flex;
+        margin-left: auto;
+        justify-content: center;
+        align-items: center;
+        align-self: center;
+        margin-right: 20px;
+        position: relative;
+
+        .user-icon{
+            width: 35px;
+            height: 35px;
+            background-color: var(--timberwolf-30);
+            border-radius: var(--border-radius-medium);
+            padding: 2px;
+            transition: all 0.5ms;
+            cursor: pointer;
+
+            &:hover{
+                background-color: var(--flame-70);
+                border-bottom-left-radius: 0px;
+                border-bottom-right-radius: 0px;
+            }
+        }
+    }
+
     &__event-block{
         display: flex;
         flex-direction: column;
@@ -98,8 +159,51 @@ const betStore = useBetStore();
             border-bottom: 5px solid var(--flame);
         }
     }
+}
 
+.user-dropdown{ 
+    position: absolute;
+    top: 100%;
+    right: 0%; 
+    z-index: 1;
+    min-width: 200px;
+    background-color: #fff;
+    border-radius: var(--border-radius-medium);
+    border-top-right-radius: 0px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    color: var(--eerie-black);
+    font-size: 12px;
 
-    
+    &__information{
+        padding: 20px;
+        border-bottom: 1px solid var(--neutral);
+    }
+
+    &__actions{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    &__logout-btn{
+        width: 100%;
+        padding: 6px 0px;
+        background-color: var(--danger);
+
+        &:hover{
+            background-color: var(--danger-70)
+        }
+    }
+
+    &__admin-btn{
+        width: 100%;
+        padding: 6px 0px;
+        background-color: var(--indigo);
+
+        &:hover{
+            background-color: var(--indigo-70)
+        }
+    }
 }
 </style>

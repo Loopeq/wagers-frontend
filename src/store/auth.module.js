@@ -1,39 +1,43 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue';
-import qs from 'qs'
+import { computed, ref } from 'vue';
 import api from '@/services/api'
-
-const TOKEN_KEY = 'jwt-token'
+import qs from 'qs'
 
 export const useAuthStore = defineStore('auth', () => {
-  const token = ref(localStorage.getItem(TOKEN_KEY) || null);
+  const isAuthenticated = ref(false)
+  const checkedAuth = ref(false);
+  const user = ref(null);
+  const isAdmin = computed(() => (user.value.superuser));
 
   const login = async (payload) => {
-      const { data } = await api.post(
-        '/login',
-        qs.stringify(payload),
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }
-      )
-      setToken(data.access_token)
+    const userResponse = await api.post('/login', qs.stringify(payload),
+    {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }); 
+    user.value = userResponse.data;
+    isAuthenticated.value = true
   }
 
-  const setToken = (newToken) => {
-      token.value = newToken
-      localStorage.setItem(TOKEN_KEY, newToken);
+  const registration = async (payload) => {
+    await api.post('/registration', payload );
+  }
+
+  const logout = async () => {
+    await api.post('/logout');
+    isAuthenticated.value = false
+  }
+
+  async function checkAuth() {
+    try {
+      const userResponse = await api.get('/users/me');
+      user.value = userResponse.data;
+      isAuthenticated.value = true;
+    } catch {
+      isAuthenticated.value = false;
     }
-
-  const logout =() => {
-    token.value = null
-    localStorage.removeItem(TOKEN_KEY);
   }
 
-  const isAuthenticated = computed(() => token.value);
-
-  return{
-    login, setToken, logout, isAuthenticated
-  }
+  return { login, logout, isAuthenticated, checkAuth, checkedAuth, registration, isAdmin, user }
 })

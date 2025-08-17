@@ -16,7 +16,7 @@ const routes = [
         }
     },  
     {
-        path: '/auth',
+        path: '/auth', 
         name: 'Auth', 
         component: () => import('../views/Auth.vue'),
         meta: {
@@ -25,6 +25,17 @@ const routes = [
             title: "Log in"
         }
     },
+    {
+        path: '/admin',
+        name: 'Admin panel',
+        component: () => import('../views/admin/AdminPanel.vue'),
+        meta: {
+            layout: 'admin',
+            auth: true, 
+            admin: true,
+            title: 'Admin Panel'
+        }
+    }
 ]
 
 const router = createRouter({
@@ -34,19 +45,25 @@ const router = createRouter({
     linkExactActiveClass: 'active',
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     const store = useAuthStore();
-    if (to === '/'){
+
+    if (!store.checkedAuth) {
+        await store.checkAuth(); 
+        store.checkedAuth = true;
+    }
+
+    const requiresAuth = to.meta.auth;
+    const requiresAdmin = to.meta.admin;
+
+    if (requiresAuth && !store.isAuthenticated) {
+        return next('/auth?message=login');
+    }
+
+    if (requiresAdmin && !store.isAdmin) {
         return next('/dashboard');
     }
-    const requiresAuth = to.meta.auth;
 
-    if(requiresAuth && store.isAuthenticated) {
-        next();
-    } else if (requiresAuth && !store.isAuthenticated){
-        next('/auth?message=auth');
-    } else {
-        next();
-    }
+    next();
 })
 export default router
