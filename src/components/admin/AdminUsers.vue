@@ -32,7 +32,7 @@ onMounted(async () => {
 </div>
 </template>
 
-<style lang="scss" >
+<style lang="scss" scoped>
 .ui-table-wrapper{
   border-radius: 0;
   margin-top: 0;
