@@ -1,10 +1,20 @@
 import { defineStore } from 'pinia'
 import {ref, computed} from 'vue' 
+import { perPage } from '@/constants'
 import api from '@/services/api'
 
 export const useBetStore = defineStore('bet', () => {
     const events = ref([]);
-    const pagination = ref({});
+    const pagination = ref({
+        client: {
+            currentPage: 1,
+            perPage: perPage, 
+        },
+        server: {
+            pages: 1,
+            currentPage: 1,
+        }
+    });
     const onPaginationFlag = ref(0);
     const page = ref(1);
     const eventsCount = ref([]);
@@ -44,19 +54,29 @@ export const useBetStore = defineStore('bet', () => {
 
     const getRelated = async (params, expand) => {
         try {
+            let offset = 0;
+            let limit = pagination.value.client.perPage;
+            if (expand) {
+                offset = pagination.value.client.currentPage * pagination.value.client.perPage;
+                pagination.value.client.currentPage++;
+            } else {
+                limit = pagination.value.client.currentPage * pagination.value.client.perPage;
+                offset = 0;
+            }
+
             const response = await api.getWithQuery('/related', {
-                ...params
+                ...params, limit, offset
             })
             if (expand) {
                 events.value = [...events.value, ...response?.data.matches];
-                } else {
+            } else {
                 events.value = response?.data.matches;
-                }
-                eventsCount.value = response?.data.match_counts;
-                pagination.value = response?.data.pagination;
+            }
+            eventsCount.value = response?.data.match_counts;
+            pagination.value.server = response?.data.pagination;
         } 
         catch (e){
-            console.error(e);
+            console.error(e);   
         }
     }
 

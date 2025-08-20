@@ -3,7 +3,6 @@ import DashboardEventColumn from '@/components/dashboard/DashboardEventColumn.vu
 import DashboardCanvas from '@/components/dashboard/DashboardCanvas.vue';
 import { useBetStore } from '@/store/bet.module';
 import {onMounted, watch, onBeforeUnmount} from 'vue';
-import { perPage } from '@/constants';
 import { useHead } from '@vueuse/head';
 
 let relatedInterval = null;
@@ -11,29 +10,41 @@ let straightInterval = null;
 
 const betStore = useBetStore();
 // Получение related
-const fetchRelated = async(params, offset, limit, expand) => { 
-    await betStore.getRelated({...params, offset: offset, limit: limit}, expand);
+const fetchRelated = async (params, expand = false) => { 
+    await betStore.getRelated({...params}, expand);
+    if (!expand) {
+        if (relatedInterval) clearInterval(relatedInterval);
 
-    if (relatedInterval) clearInterval(relatedInterval);
-    relatedInterval = setInterval(async() => {
-        await betStore.getRelated({...params, offset: 0, limit: perPage * betStore.pagination.current_page}, false);
-    }, 10_000)
-} 
-onMounted( async () => {
+        relatedInterval = setInterval(async () => {
+            await betStore.getRelated({...params}, false);
+        }, 10_000);
+    }
+};
+
+onMounted(async () => {
     await betStore.getSports();
-    await fetchRelated(betStore.relatedParams, 0, perPage, false)
-    if (betStore.events.length){
+    await fetchRelated(betStore.relatedParams, false);
+
+    if (betStore.events.length) {
         betStore.selectedEventId = betStore.events[0].id; 
     }
-})
-// Тригер изменения фильтров в related
-watch(() => betStore.relatedParams, async (params) => {
-    await fetchRelated(params, 0, perPage, false)
-}, {deep: true})
-// Тригер при пагинации
-watch(() => betStore.onPaginationFlag, async () => {
-    await fetchRelated(betStore.relatedParams, perPage * betStore.pagination.current_page, perPage, true)
-}, {deep: true})
+});
+// watcher для фильтров
+watch(
+    () => betStore.relatedParams,
+    async (params) => {
+        betStore.pagination.client.currentPage = 1;
+        await fetchRelated(params, false);
+    },
+    { deep: true }
+);
+// watcher для кнопки Показать ещё
+watch(
+    () => betStore.onPaginationFlag,
+    async () => {
+        await fetchRelated(betStore.relatedParams, true);
+    }
+);
 // Тригер при изменении выбранного ивента
 watch(() => betStore.selectedEventId, async (eventId) => {
     let currentEvent = betStore.events.find((event) => event.id === eventId);

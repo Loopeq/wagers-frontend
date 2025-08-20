@@ -17,8 +17,9 @@ const onPagination = () => {
 }
 
 const canPaginate = computed(() => {
-    return betStore.pagination.pages > betStore.pagination.current_page 
-}) 
+    const { client, server } = betStore.pagination;
+    return client.currentPage < server.pages;
+});
 </script>
 
 <template>
