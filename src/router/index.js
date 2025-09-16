@@ -21,7 +21,7 @@ const routes = [
         component: () => import('../views/Bet.vue'),
         meta: {
           layout: 'bet',
-          auth: true,
+          auth: false,
           title: "Betting"
         }
     },

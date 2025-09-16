@@ -13,6 +13,7 @@ const onLeagueClick = (leagueId) => {
 
 <template>
     <div class="betting-leagues card">
+        <div class="betting-leagues__block-title">Leagues A-Z</div>
         <div class="betting-leagues__league" v-for="league in betStore.leagues" :key="league.id" @click="onLeagueClick(league.id)">
             <div class="betting-leagues__league-name">
                 {{ league.name }}
@@ -29,23 +30,22 @@ const onLeagueClick = (leagueId) => {
 .betting-leagues{
     display: flex;
     flex-direction: column;
-    cursor: pointer;
+    font-size: 12px;
 
     &__league{
+        cursor: pointer;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 10px 10px;
         gap: 20px;
-        font-size: 12px;
 
         &:hover{
-            background-color: var(--neutral);
+            background-color: var(--timberwolf-15);
         }
     }
 
     &__league-name{
-        color: var(--black-olive);
         max-width: 250px;
         text-wrap: nowrap;
         overflow: hidden;
@@ -54,6 +54,11 @@ const onLeagueClick = (leagueId) => {
 
     &__league-event-count{
         color: var(--flame-70)
+    }
+
+    &__block-title{
+        padding: 10px 10px;
+        background-color: var(--black-olive);
     }
 }
 </style>

@@ -9,7 +9,7 @@ const betStore = useBetStore();
 
 const onSportChange = (sport) => {
     router.push({ name: 'Betting', params: { sportId: sport.id } });
-    betStore.sportId = sport.id;
+    betStore.sportId = String(sport.id);
 }
 const getSportCount = (sport) => sport.match_count ?? 0;
 
@@ -23,7 +23,7 @@ const getSportCount = (sport) => sport.match_count ?? 0;
                     v-for="sport in betStore.sports" 
                     :key="sport.id" 
                     class="header__event-block"
-                    :class="{'selected': betStore.sportId === sport.id}"
+                    :class="{'selected': betStore.sportId === String(sport.id)}"
                     @click="onSportChange(sport)"
                     >
                     <div class="header__row-item">

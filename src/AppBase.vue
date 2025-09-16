@@ -36,8 +36,10 @@ body {
    margin: 0;
    padding: 0;
 }
+
 :root{
-  --floral-white: #fffcf2;
+  --floral-white: rgb(255, 252, 242);
+  --floral-white-80: rgb(255, 252, 242, .8);
   --timberwolf: #89a0b2;
   --surface: rgb(237, 241, 246);
   --surface-50: rgb(237, 241, 246, .5);
@@ -120,9 +122,11 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
 input[type=number] {
   -moz-appearance: textfield;
 }
+
 .card{ 
   border-radius: var(--border-radius-small);
   background-color: white;
@@ -194,4 +198,36 @@ input:-webkit-autofill {
     font-style: italic;
   }
 }
+
+@supports (scrollbar-color: auto) {
+  * {
+    scrollbar-color: #888 transparent; /* thumb / track прозрачный */
+    scrollbar-width: thin;             /* тонкий скроллбар */
+  }
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent; /* прозрачный трек, убираем фон */
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #888;       /* ползунок */
+  border-radius: 4px;     /* закругление */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #555;       /* темнее при наведении */
+}
+
+/* Убираем стрелки (класс old-school) */
+*::-webkit-scrollbar-button {
+  display: none;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent; /* угол скроллбаров прозрачный */
+}
+
 </style>

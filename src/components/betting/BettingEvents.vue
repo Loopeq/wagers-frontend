@@ -57,14 +57,11 @@ const onEventClick = (matchId) => {
 .event-day {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 .event-date {
   font-size: 12px;
   font-weight: bold;
-  color: var(--black-olive);
-  border-bottom: 2px solid var(--timberwolf);
   padding-bottom: 5px;
   padding: 20px;
 }
@@ -78,9 +75,8 @@ const onEventClick = (matchId) => {
 .league-name {
   font-size: 12px;
   font-weight: 600;
-  color: var(--black-olive);
-  padding: 0 20px;
-  margin-bottom: 12px;
+  padding: 20px 20px;
+  background-color: var(--black-olive);
 }
 
 .match-card {
@@ -93,7 +89,7 @@ const onEventClick = (matchId) => {
     cursor: pointer;
 
     &:hover{
-        background-color: var(--neutral);
+        background-color: var(--timberwolf-15);
     }
 
     &:first-of-type{
@@ -109,14 +105,13 @@ const onEventClick = (matchId) => {
     .team {
       font-size: 12px;
       font-weight: 500;
-      color: var(--black-olive);
     }
   }
 
   .time {
     font-size: 12px;
     font-weight: 500;
-    color: var(--black-olive);
+    color: var(--black-olve);
     white-space: nowrap;
     margin-right: 20px;
   }

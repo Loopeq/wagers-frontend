@@ -27,12 +27,12 @@ const onLeagueClick = (leagueId) => {
 </script>
 
 <template>
-    <div class="betting-event">
-      <div class="betting-event__match card">
-          <div class="betting-event__top-info card">
+    <div class="betting-event card">
+      <div class="betting-event__match">
+          <div class="betting-event__top-info">
             <span class="betting-event__top-league" @click="onLeagueClick(event.league_id)">{{event.league_name}}</span>
           </div>
-          <div class="betting-event__info card">
+          <div class="betting-event__info">
               <div>{{event.home_team}}</div>
               <div>{{ event.away_team }}</div>
               <div>{{ getLocDate(event.start_time) }}</div>
@@ -41,31 +41,27 @@ const onLeagueClick = (leagueId) => {
       <div class="betting-event__bets">
           <div v-for="variants, title in bets" :key="title" class="betting-event__bet">
               <div class="betting-event__bet-type">{{ title }}</div>
-              <div class="betting-event__bet-variants" v-for="(variant, index) in variants" :key="index">
-                <div class="betting-event__bet-variant">
-                  <div class="betting-event__bet-cell card">
-                      <span>{{ variant.point ?? '' }}</span>
-                      <span class="betting-event__bet-coeff">{{ variant.home_cf }}</span>
-                  </div>
-                  <div class="betting-event__bet-cell card">
-                    <span>{{ -variant.point }}</span>
-                    <span class="betting-event__bet-coeff">{{ variant.away_cf }}</span>
+              <div class="betting-event__bet-variant-wrapper">
+                <div class="betting-event__bet-variants" v-for="(variant, index) in variants" :key="index">
+                  <div class="betting-event__bet-variant">
+                    <div class="betting-event__bet-cell">
+                        <span>{{ variant.point ?? '' }}</span>
+                        <span class="betting-event__bet-coeff">{{ variant.home_cf }}</span>
+                    </div>
+                    <div class="betting-event__bet-cell">
+                      <span>{{ -variant.point }}</span>
+                      <span class="betting-event__bet-coeff">{{ variant.away_cf }}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+                </div>
+
           </div>
       </div>
     </div>
   </template>
 
 <style lang="scss" scoped>
-
-.betting-event__bet:first-of-type .betting-event__bet-type {
-  border-radius: var(--border-radius-medium);
-  border-end-end-radius: 0;
-  border-end-start-radius: 0;
-}
-
 .betting-event {
   display: flex;
   flex-direction: column;
@@ -103,15 +99,18 @@ const onLeagueClick = (leagueId) => {
     border-top-right-radius: 0;
   }
 
-  &__bets{
-    display: flex;
-    flex-direction: column;
-  }
+  &__bets { 
+    column-count: 2; 
+    column-gap: 10px; 
+    padding-left: 10px; 
+    padding-right: 10px; 
+    padding-bottom: 10px; 
+    > * { display: inline-block; width: 100%; margin-bottom: 10px; break-inside: avoid; } }
 
   &__bet{
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+    border: 1px solid var(--black-olive);
   }
 
   &__bet-type{
@@ -123,8 +122,14 @@ const onLeagueClick = (leagueId) => {
   &__bet-variants{
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 10px 15px;
+    gap: 5px;
+  }
+
+  &__bet-variant-wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
   }
   
   &__bet-variant{
@@ -139,6 +144,7 @@ const onLeagueClick = (leagueId) => {
     justify-content: space-between;
     padding: 10px;
     border: 1px solid var(--neutral);
+    background-color: var(--black-olive);;
 
     &:hover{
       border: 1px solid var(--flame);
@@ -147,7 +153,7 @@ const onLeagueClick = (leagueId) => {
   }
 
   &__bet-coeff{
-    color: var(--agree-90);
+    color: var(--flame);
   }
 }
 </style>
