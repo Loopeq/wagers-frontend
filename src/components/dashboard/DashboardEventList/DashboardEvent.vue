@@ -1,9 +1,9 @@
 
 <script setup>
 import { defineProps } from 'vue';
-import { useBetStore } from '@/store/bet.module';
+import { useMovementStore } from '@/store/movement.module';
 
-const betStore = useBetStore();
+const movementStore = useMovementStore();
 
 defineProps({
     event: {
@@ -17,7 +17,7 @@ defineProps({
 </script>
 
 <template>
-<div class="event-card__card" @click="betStore.selectedEventId = event.id">
+<div class="event-card__card" @click="movementStore.selectedEventId = event.id">
     <div class="event-card__move-timer__wrapper">
         <div class="event-card__move-timer">
             <span class="event-card__move-timer date">{{ $formatDate(event.last_update) }}</span>

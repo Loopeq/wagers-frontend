@@ -2,54 +2,54 @@
 import { sorts, startTime } from '@/constants';
 import UiSwitch from '@/ui/UiSwitch/UiSwitch.vue';
 import {ref, watch, onMounted, computed} from 'vue';
-import { useBetStore } from '@/store/bet.module';
+import { useMovementStore } from '@/store/movement.module';
 import UiSelect from '@/ui/UiSelect/UiSelect.vue';
 
-const betStore = useBetStore(); 
+const movementStore = useMovementStore(); 
 const sortId = ref(null);
 const timeId = ref(null);
 const isFilterSelectVisible = ref(false);
 
 onMounted(() => {
-  sortId.value = sorts.find((val) => val.code === betStore.relatedParams.sort_by).id;
+  sortId.value = sorts.find((val) => val.code === movementStore.relatedParams.sort_by).id;
 });
 
 watch(sortId, (value) => {
   const current = sorts.find((sort) => sort.id === value);
   if (current) {
-    betStore.relatedParams.sort_by = current.code;
-    betStore.relatedParams.sort_order = current.order;
+    movementStore.relatedParams.sort_by = current.code;
+    movementStore.relatedParams.sort_order = current.order;
     // Для законченных матчей меняем стандартную сортировку asc => desc;
-    if (current.code === 'start_time' && betStore.relatedParams.finished){
-        betStore.relatedParams.sort_order = 'desc';
+    if (current.code === 'start_time' && movementStore.relatedParams.finished){
+        movementStore.relatedParams.sort_order = 'desc';
     }
   }
 });
 
 const setTime = (time) => {
     timeId.value = time.id;
-    betStore.relatedParams.hours = time.hour;
+    movementStore.relatedParams.hours = time.hour;
 }
 
 const setFilter = (type) => {
   if (type === 'all') {
-    betStore.relatedParams.finished = null;
-    betStore.relatedParams.hours = null;
-    betStore.relatedParamsViewMode = 'all';
+    movementStore.relatedParams.finished = null;
+    movementStore.relatedParams.hours = null;
+    movementStore.relatedParamsViewMode = 'all';
   } else if (type === 'finished') {
-    betStore.relatedParams.finished = true;
-    betStore.relatedParams.hours = null;
-    betStore.relatedParamsViewMode = 'finished';
+    movementStore.relatedParams.finished = true;
+    movementStore.relatedParams.hours = null;
+    movementStore.relatedParamsViewMode = 'finished';
   } else if (type === 'until') {
-    betStore.relatedParams.finished = false;
+    movementStore.relatedParams.finished = false;
     setTime(startTime[0]);
-    betStore.relatedParamsViewMode = 'until';
+    movementStore.relatedParamsViewMode = 'until';
   }
 };
 
-const allSelected = computed(() => betStore.relatedParamsViewMode === 'all');
-const finishedSelected = computed(() => betStore.relatedParamsViewMode === 'finished');
-const untilSelected = computed(() => betStore.relatedParamsViewMode === 'until');
+const allSelected = computed(() => movementStore.relatedParamsViewMode === 'all');
+const finishedSelected = computed(() => movementStore.relatedParamsViewMode === 'finished');
+const untilSelected = computed(() => movementStore.relatedParamsViewMode === 'until');
 
 </script>
 
@@ -84,7 +84,7 @@ const untilSelected = computed(() => betStore.relatedParamsViewMode === 'until')
     </div>
     <div class="event-settings__bottom">
         Включать матчи без движений
-        <UiSwitch v-model="betStore.relatedParams.nulls"/>
+        <UiSwitch v-model="movementStore.relatedParams.nulls"/>
     </div>
 </div>
 </template>

@@ -16,6 +16,16 @@ const routes = [
         }
     },  
     {
+        path: '/betting/:sportId?/:leagueId?/:matchId?',
+        name: 'Betting',
+        component: () => import('../views/Bet.vue'),
+        meta: {
+          layout: 'bet',
+          auth: true,
+          title: "Betting"
+        }
+    },
+    {
         path: '/auth', 
         name: 'Auth', 
         component: () => import('../views/Auth.vue'),

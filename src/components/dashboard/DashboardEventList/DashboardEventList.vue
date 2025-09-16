@@ -1,23 +1,23 @@
 <script setup>
 import { defineProps, computed } from 'vue';
-import { useBetStore } from '@/store/bet.module';
+import { useMovementStore } from '@/store/movement.module';
 import DashboardEvent from './DashboardEvent.vue';
 
 defineProps({
   eventList: Array,
 })
 
-const betStore = useBetStore();
+const movementStore = useMovementStore();
 
 const onEventClick = (event) => {
-    betStore.selectedEventId = event.id;
+    movementStore.selectedEventId = event.id;
 }
 const onPagination = () => { 
-    betStore.onPaginationFlag = !betStore.onPaginationFlag;
+    movementStore.onPaginationFlag = !movementStore.onPaginationFlag;
 }
 
 const canPaginate = computed(() => {
-    const { client, server } = betStore.pagination;
+    const { client, server } = movementStore.pagination;
     return client.currentPage < server.pages;
 });
 </script>
@@ -28,7 +28,7 @@ const canPaginate = computed(() => {
             v-for="event in eventList" 
             :key="event.id" 
             class="event-list__col" 
-            :class="{'selected': betStore.selectedEventId === event.id}"
+            :class="{'selected': movementStore.selectedEventId === event.id}"
             @click="onEventClick(event)"
         >   
             <DashboardEvent :event="event"/>

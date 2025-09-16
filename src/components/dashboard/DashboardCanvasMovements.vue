@@ -1,14 +1,14 @@
 <script setup>
-import { useBetStore } from '@/store/bet.module';
+import { useMovementStore } from '@/store/movement.module';
 import { useRowItemData } from '@/use/useRowItemData';
 import {computed, ref, watch } from 'vue';
 import UiTable from '@/ui/UiTable/UiTable.vue';
 import UiTogglePeriods from '@/ui/UiTogglePeriods/UiTogglePeriods.vue';
 
-const betStore = useBetStore();
+const movementStore = useMovementStore();
 const selectedPeriod = ref(null);
 const movementRow = computed(() => {
-  return betStore.eventChanges
+  return movementStore.eventChanges
     .filter((pair) => {
       if (!selectedPeriod.value) return true;
       return (
@@ -19,13 +19,13 @@ const movementRow = computed(() => {
     .map((pair) => useRowItemData(pair));
 });
 const periods = computed(() => {
-  return betStore.eventPeriods.filter((period) => period.changes_count !== 0);
+  return movementStore.eventPeriods.filter((period) => period.changes_count !== 0);
 })
 const nullTitle = computed(() => {
-  return `Все (${betStore.eventPeriods.reduce((acc, cur) => acc + cur.changes_count, 0)})`
+  return `Все (${movementStore.eventPeriods.reduce((acc, cur) => acc + cur.changes_count, 0)})`
 })
 // Сброс выбранного периода при выборе ивента
-watch(() => betStore.selectedEventId, () => {
+watch(() => movementStore.selectedEventId, () => {
   selectedPeriod.value = null;
 })
 </script>

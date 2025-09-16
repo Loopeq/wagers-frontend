@@ -1,11 +1,11 @@
 <script setup>
-import { useBetStore } from '@/store/bet.module';
+import { useMovementStore } from '@/store/movement.module';
 import { useRowItemData } from '@/use/useRowItemData';
 import {computed} from 'vue';
 import UiTable from '@/ui/UiTable/UiTable.vue';
-const betStore = useBetStore();
+const movementStore = useMovementStore();
 const comparisonRow = computed(() => {
-  return betStore.eventComparison.map((pair) => useRowItemData(pair))
+  return movementStore.eventComparison.map((pair) => useRowItemData(pair))
 })
 </script>
 

@@ -1,12 +1,14 @@
 <script setup>
 import UiIcon from '@/ui/UiIcon/UiIcon.vue';
-import { useBetStore } from '@/store/bet.module';
+import { useMovementStore } from '@/store/movement.module';
 import UiButton from '@/ui/UiButton/UiButton.vue';
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import { useAuthStore } from '@/store/auth.module';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+import { AppRoutes } from '@/constants';
 const router = useRouter()
-const betStore = useBetStore(); 
+const route = useRoute()
+const movementStore = useMovementStore(); 
 const authStore = useAuthStore();
 const userSettingsVisible = ref(false);
 const onLogout = async () => {
@@ -16,43 +18,54 @@ const onLogout = async () => {
 const onAdmin = async () => {
     router.push('/admin');
 } 
+
+const getSportCount = (sport) => {
+  if (route.path.includes(AppRoutes.DASHBOARD)) return movementStore.eventsCountMap[sport.id] ?? 0
+  if (route.path.includes(AppRoutes.BETTING)) return sport.match_count ?? 0
+  return 0
+}
+
+onMounted( async () => {
+  await movementStore.getSports();  
+})
+
 </script>
 <template>
     <header class="header">
         <div class="header__col">
             <div class="header__row">
                 <div 
-                    v-for="sport in betStore.sports" 
+                    v-for="sport in movementStore.sports" 
                     :key="sport.id" 
                     class="header__event-block" 
-                    :class="{'selected': betStore.relatedParams.sport_id === sport.id}"
-                    @click="betStore.relatedParams.sport_id = sport.id"
+                    :class="{'selected': movementStore.relatedParams.sport_id === sport.id}"
+                    @click="movementStore.relatedParams.sport_id = sport.id"
                     >
                     <div class="header__row-item">
                         <UiIcon class="icon" :name="sport.name.toLowerCase()"/>
-                        <div class="tool">{{betStore.eventsCountMap[sport.id]}}</div>
+                        <div class="tool">{{ getSportCount(sport) }}</div>
                     </div>
                     <span>{{sport.name_ru}}</span>
                 </div>
-                <div class="header__tools-block" 
-                    @mouseleave="userSettingsVisible = false">
-                    <UiIcon class="user-icon" name="settings" 
-                            @mouseover="userSettingsVisible = true"/>
-
-                    <div v-if="userSettingsVisible" 
-                        class="user-dropdown" 
+            </div>
+            <div class="header__tools-block" 
+                @mouseleave="userSettingsVisible = false">
+                <UiButton class="user-settings" 
                         @mouseover="userSettingsVisible = true">
-                        <div class="user-dropdown__information">
-                            <span>{{authStore.user.email}}</span>
-                        </div>
-                        <div class="user-dropdown__actions">
-                            <UiButton v-if="authStore.isAdmin" class="user-dropdown__admin-btn" @click="onAdmin">Админ панель</UiButton>
-                            <div class="user-dropdown__logout">
-                                <UiButton class="user-dropdown__logout-btn" @click="onLogout">Выйти из аккаунта</UiButton>
-                            </div>
-                        </div>
+                        Settings
+                </UiButton>
 
-                        
+                <div v-if="userSettingsVisible" 
+                    class="user-dropdown" 
+                    @mouseover="userSettingsVisible = true">
+                    <div class="user-dropdown__information">
+                        <span>{{authStore.user.email}}</span>
+                    </div>
+                    <div class="user-dropdown__actions">
+                        <UiButton v-if="authStore.isAdmin" class="user-dropdown__admin-btn" @click="onAdmin">Админ панель</UiButton>
+                        <div class="user-dropdown__logout">
+                            <UiButton class="user-dropdown__logout-btn" @click="onLogout">Выйти из аккаунта</UiButton>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,12 +76,12 @@ const onAdmin = async () => {
 <style lang="scss" scoped>
 .header{ 
     width: 100%; 
-    height: 80px;
     padding: var(--container-padding);
     position: fixed;
     z-index: 2;
 
     &__col{ 
+        position: relative;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -83,7 +96,7 @@ const onAdmin = async () => {
         align-items: flex-end;
         width: 100%;
         height: 100%;
-
+        margin-top: 10px;
     }
 
     &__row-item{
@@ -106,20 +119,20 @@ const onAdmin = async () => {
     }
 
     &__tools-block{
+        position: absolute;
         display: flex;
         margin-left: auto;
         justify-content: center;
         align-items: center;
         align-self: center;
         margin-right: 20px;
-        position: relative;
+        right: 0;
 
-        .user-icon{
-            width: 35px;
-            height: 35px;
+        .user-settings{
+            font-size: 16px;
             background-color: var(--timberwolf-30);
             border-radius: var(--border-radius-medium);
-            padding: 2px;
+            padding: 10px 20px;
             transition: all 0.5ms;
             cursor: pointer;
 

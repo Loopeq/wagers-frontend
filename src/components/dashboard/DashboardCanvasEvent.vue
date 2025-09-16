@@ -1,10 +1,10 @@
 <script setup>
-import { useBetStore } from '@/store/bet.module';
+import { useMovementStore } from '@/store/movement.module';
 import { useMatchResult } from '@/use/useMatchResult';
 import { computed } from 'vue';
-const betStore = useBetStore();
-const event = computed(() => betStore.event)
-const eventResult = computed(() => useMatchResult(betStore.eventResult));
+const movementStore = useMovementStore();
+const event = computed(() => movementStore.event)
+const eventResult = computed(() => useMatchResult(movementStore.eventResult));
 </script>
 
 <template>
@@ -14,7 +14,7 @@ const eventResult = computed(() => useMatchResult(betStore.eventResult));
             <span>{{event.home_name}}</span>
             <span>{{event.away_name}}</span>
         </div>
-        <div v-if="betStore.eventResult.length" class="event__result">
+        <div v-if="movementStore.eventResult.length" class="event__result">
             <div class="event__result--period" v-for="(period, idx) in eventResult.result" :key='idx'>
                 <div :class="{'event__result--lose': period[0] < period[1]}">{{ period[0] }}</div>
                 <div :class="{'event__result--lose': period[1] < period[0]}">{{ period[1] }}</div>

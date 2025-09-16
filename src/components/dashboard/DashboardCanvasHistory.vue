@@ -1,8 +1,8 @@
 <script setup>
-import { useBetStore } from '@/store/bet.module';
+import { useMovementStore } from '@/store/movement.module';
 import DashboardEvent from './DashboardEventList/DashboardEvent.vue';
 
-const betStore = useBetStore();
+const movementStore = useMovementStore();
 </script>
 
 <template>
@@ -10,12 +10,12 @@ const betStore = useBetStore();
 <div class="canvas-history">
     <div class="canvas-history__teams">
         <div class="canvas-history__team">
-            <div class="canvas-history__team-name">{{ betStore.event.home_name }}</div>
-            <template v-if="betStore.eventHistory?.home?.length">
+            <div class="canvas-history__team-name">{{ movementStore.event.home_name }}</div>
+            <template v-if="movementStore.eventHistory?.home?.length">
                 <div class="canvas-history__events">
                     <DashboardEvent 
                         class="canvas-history__event" 
-                        v-for="event in betStore.eventHistory?.home" 
+                        v-for="event in movementStore.eventHistory?.home" 
                         :key="event.id" 
                         :event="event"
                         :show-league="false" 
@@ -27,12 +27,12 @@ const betStore = useBetStore();
             </template>
         </div>
         <div class="canvas-history__team">
-            <div class="canvas-history__team-name">{{ betStore.event.away_name }}</div>
-            <template v-if="betStore.eventHistory?.away?.length">
+            <div class="canvas-history__team-name">{{ movementStore.event.away_name }}</div>
+            <template v-if="movementStore.eventHistory?.away?.length">
                 <div class="canvas-history__events">
                     <DashboardEvent 
                         class="canvas-history__event" 
-                        v-for="event in betStore.eventHistory?.away" 
+                        v-for="event in movementStore.eventHistory?.away" 
                         :key="event.id" 
                         :event="event"
                         :show-league="false"

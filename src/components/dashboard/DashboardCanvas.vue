@@ -29,14 +29,13 @@ import DashboardCanvasMovements from './DashboardCanvasMovements.vue';
 .dashboard-canvas{
     position: sticky;
     top: calc(var(--header-height) + 10px);
-    height: calc(100vh - 110px);
+    height: calc(100vh - (var(--header-height) + 20px));
     overflow-y: auto;
     overscroll-behavior-y: contain;
     background: white;
     margin: 20px 10px;
-
-    
 }
+
 .dashboard-events{
     margin-top: 20px;
 }

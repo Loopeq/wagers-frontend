@@ -9,6 +9,7 @@ import {useRoute} from 'vue-router';
 import AuthLayout from './layout/AuthLayout.vue';
 import MainLayout from './layout/MainLayout.vue';
 import AdminLayout from './layout/AdminLayout.vue';
+import BetLayout from './layout/BetLayout.vue';
 
 export default {
   setup(){
@@ -17,7 +18,7 @@ export default {
       layout: computed(() => route.meta.layout)
     }
   },
-  components: {AuthLayout, MainLayout, AdminLayout}
+  components: {AuthLayout, MainLayout, AdminLayout, BetLayout}
 }
 </script> 
 
@@ -89,7 +90,8 @@ body {
   --border-radius-medium: 10px;
   --border-radius-small: 8px;
   --container-padding: 0px 40px;
-  --header-height: 80px;
+  --header-height: 60px;
+  --header-bet-height: 140px;
 }
 html{
   font-size: 10px;

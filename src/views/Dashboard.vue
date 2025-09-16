@@ -1,71 +1,70 @@
 <script setup>
 import DashboardEventColumn from '@/components/dashboard/DashboardEventColumn.vue';
 import DashboardCanvas from '@/components/dashboard/DashboardCanvas.vue';
-import { useBetStore } from '@/store/bet.module';
+import { useMovementStore } from '@/store/movement.module';
 import {onMounted, watch, onBeforeUnmount} from 'vue';
 import { useHead } from '@vueuse/head';
 
 let relatedInterval = null;
 let straightInterval = null;
 
-const betStore = useBetStore();
+const movementStore = useMovementStore();
 // Получение related
 const fetchRelated = async (params, expand = false) => { 
-    await betStore.getRelated({...params}, expand);
+    await movementStore.getRelated({...params}, expand);
     if (!expand) {
         if (relatedInterval) clearInterval(relatedInterval);
 
         relatedInterval = setInterval(async () => {
-            await betStore.getRelated({...params}, false);
+            await movementStore.getRelated({...params}, false);
         }, 10_000);
     }
 };
 
 onMounted(async () => {
-    await betStore.getSports();
-    await fetchRelated(betStore.relatedParams, false);
+    await fetchRelated(movementStore.relatedParams, false);
 
-    if (betStore.events.length) {
-        betStore.selectedEventId = betStore.events[0].id; 
+    if (movementStore.events.length) {
+        movementStore.selectedEventId = movementStore.events[0].id; 
     }
 });
 // watcher для фильтров
 watch(
-    () => betStore.relatedParams,
+    () => movementStore.relatedParams,
     async (params) => {
-        betStore.pagination.client.currentPage = 1;
+        movementStore.pagination.client.currentPage = 1;
         await fetchRelated(params, false);
     },
     { deep: true }
 );
 // watcher для кнопки Показать ещё
 watch(
-    () => betStore.onPaginationFlag,
+    () => movementStore.onPaginationFlag,
     async () => {
-        await fetchRelated(betStore.relatedParams, true);
+        await fetchRelated(movementStore.relatedParams, true);
     }
 );
 // Тригер при изменении выбранного ивента
-watch(() => betStore.selectedEventId, async (eventId) => {
-    let currentEvent = betStore.events.find((event) => event.id === eventId);
+watch(() => movementStore.selectedEventId, async (eventId) => {
+    let currentEvent = movementStore.events.find((event) => event.id === eventId);
     if (!currentEvent) {    
         currentEvent = [
-            ...betStore.eventHistory.home, 
-            ...betStore.eventHistory.away
+            ...movementStore.eventHistory.home, 
+            ...movementStore.eventHistory.away
         ].find((event) => event.id === eventId); 
     }
-    await betStore.getStraight({
+    await movementStore.getStraight({
         match_id: eventId,
         child_id: currentEvent.child_id,
     })
-    await betStore.getHistory({
+    await movementStore.getHistory({
         home_id: currentEvent.home_team_id,
         away_id: currentEvent.away_team_id,
         current_match_id: currentEvent.id,
     });
     if (straightInterval) clearInterval(straightInterval);
     straightInterval = setInterval(async() => {
-        await betStore.getStraight({
+        await movementStore.getStraight({
             match_id: eventId,
             child_id: currentEvent.child_id,
         });
@@ -84,7 +83,7 @@ useHead({
 
 <template>
     <div class="dashboard-grid">
-        <DashboardEventColumn :events="betStore.events"/>
+        <DashboardEventColumn :events="movementStore.events"/>
         <DashboardCanvas />
     </div>
 </template>
