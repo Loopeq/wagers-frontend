@@ -46,6 +46,7 @@ const showSingleEvent = computed(() => {
         <Transition name="soft-fade" mode="out-in">
           <component
             :is="showSingleEvent ? BettingEvent : BettingEvents"
+            :key="route.params.matchId || betStore.events"
             class="betting-events"
           />
         </Transition>
@@ -66,7 +67,7 @@ const showSingleEvent = computed(() => {
 
 .betting-grid {
   display: grid;
-  grid-template-columns: 1fr 5fr 1.5fr;
+  grid-template-columns: 1.25fr 5fr 1.5fr;
   position: relative;
   height: calc(100vh - var(--header-bet-height) - 10px);
 }

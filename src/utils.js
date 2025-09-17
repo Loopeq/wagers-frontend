@@ -28,3 +28,16 @@ export function value_diff(left, right){
     const style = threshhold.point.find(item => item.min <= diff && item.max > diff).class;
     return {diff: parseFloat(diff), style}
 }
+
+export function getBetVariant(variant, teamName, isMain) {
+    switch (variant.type) {
+        case 'moneyline': return teamName;
+        case 'spread': return isMain ? variant.point : -variant.point;
+        case 'team_total': {
+            const isHome = variant.key.includes('home');
+            return `${isHome ? 'Over' : 'Under'} ${variant.point}`;
+        }
+        case 'total': return `${isMain ? 'Over' : 'Under'} ${variant.point}`;
+        default: throw new Error(`Unknown variant type: ${variant.type}`);
+    }
+}

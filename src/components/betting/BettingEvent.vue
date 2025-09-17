@@ -3,6 +3,7 @@ import { useBetStore } from '@/store/bet.module';
 import { computed } from 'vue';
 import { capitalizer } from '@/utils/core';
 import { useRoute, useRouter } from 'vue-router';
+import { getBetVariant } from '@/utils';
 
 const router = useRouter();
 const route = useRoute();
@@ -45,11 +46,11 @@ const onLeagueClick = (leagueId) => {
                 <div class="betting-event__bet-variants" v-for="(variant, index) in variants" :key="index">
                   <div class="betting-event__bet-variant">
                     <div class="betting-event__bet-cell">
-                        <span>{{ variant.point ?? '' }}</span>
+                        <span>{{ getBetVariant(variant, event.home_team, 1) }}</span>
                         <span class="betting-event__bet-coeff">{{ variant.home_cf }}</span>
                     </div>
                     <div class="betting-event__bet-cell">
-                      <span>{{ -variant.point }}</span>
+                      <span>{{ getBetVariant(variant, event.away_team, 0) }}</span>
                       <span class="betting-event__bet-coeff">{{ variant.away_cf }}</span>
                     </div>
                   </div>
@@ -114,7 +115,7 @@ const onLeagueClick = (leagueId) => {
   }
 
   &__bet-type{
-    background-color: var(--black-olive);
+    background-color: var(--black-secondary);
     color: var(--floral-white);
     padding: 10px 15px;
   }
@@ -153,7 +154,7 @@ const onLeagueClick = (leagueId) => {
   }
 
   &__bet-coeff{
-    color: var(--flame);
+    color: var(--bet-primary);
   }
 }
 </style>

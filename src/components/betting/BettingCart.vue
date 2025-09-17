@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import UiIcon from '@/ui/UiIcon/UiIcon.vue';
 import emptyImage from '@/assets/icons/empty.png';
+import BettingCartItem from './components/BettingCartItem.vue';
 
 const tab = ref('cart');
 
@@ -34,19 +35,30 @@ const setTab = (inTab) => {
         </div>
       </div>
     </div>
-
     <div class="betting-cart__content">
       <div v-if="tab === 'cart'">
-        <div class="betting-cart__empty-content">
-          <img class="betting-cart__empty-content-img" :src="emptyImage" alt="empty" loading="lazy">
-          <span>Нет активных ставок</span>
-        </div>
+        <template v-if="false">
+          <div class="betting-cart__empty-content">
+            <img class="betting-cart__empty-content-img" :src="emptyImage" alt="empty" loading="lazy">
+            <span>Нет активных ставок</span>
+          </div>
+        </template>
+        <template v-else>
+          <div class="betting-cart__sections">
+            <UiIcon class="icon icon-trash" name="trash"/>
+          </div>
+          <BettingCartItem />
+        </template>
       </div>
       <div v-else-if="tab === 'history'">
-        <div class="betting-cart__empty-content">
-          <img class="betting-cart__empty-content-img" :src="emptyImage" alt="empty" loading="lazy">
-          <span>Нет посчитанных ставок</span>
-        </div>
+        <template v-if='true'>
+          <div class="betting-cart__empty-content">
+              <img class="betting-cart__empty-content-img" :src="emptyImage" alt="empty" loading="lazy">
+              <span>Нет посчитанных ставок</span>
+          </div>
+        </template>
+        <template v-if="false">
+        </template>
       </div>
     </div>
   </div>
@@ -57,7 +69,6 @@ const setTab = (inTab) => {
   display: flex;
   flex-direction: column;
   position: relative;
-  gap: 10px;
   margin-left: 10px;
   font-size: 12px;
   color: var(--floral-white);
@@ -68,6 +79,13 @@ const setTab = (inTab) => {
     justify-content: space-evenly;
     border-bottom: 1px solid var(--black-olive);
     padding: 0 20px; 
+  }
+  
+  &__sections{
+    display: flex;
+    border-bottom: 1px solid var(--black-olive);
+    padding: 10px 20px;
+
   }
 
   &__menu-section{
@@ -118,6 +136,10 @@ const setTab = (inTab) => {
   .icon{
     width: 20px;
     height: 20px;
+  }
+
+  .icon-trash{
+    margin-left: auto;
   }
 
   &__empty-content-img{

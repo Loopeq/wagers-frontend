@@ -3,6 +3,7 @@ import UiIcon from '@/ui/UiIcon/UiIcon.vue';
 import { useBetStore } from '@/store/bet.module';
 import { capitalizer } from '@/utils/core';
 import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 
 const router = useRouter();
 const betStore = useBetStore();
@@ -12,6 +13,7 @@ const onSportChange = (sport) => {
     betStore.sportId = String(sport.id);
 }
 const getSportCount = (sport) => sport.match_count ?? 0;
+const selectedSport = computed(() => betStore.sportId);
 
 </script>
 <template>
@@ -23,7 +25,7 @@ const getSportCount = (sport) => sport.match_count ?? 0;
                     v-for="sport in betStore.sports" 
                     :key="sport.id" 
                     class="header__event-block"
-                    :class="{'selected': betStore.sportId === String(sport.id)}"
+                    :class="{'selected': String(selectedSport) === String(sport.id)}"
                     @click="onSportChange(sport)"
                     >
                     <div class="header__row-item">

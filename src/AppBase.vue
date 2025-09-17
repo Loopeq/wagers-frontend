@@ -46,7 +46,8 @@ body {
   --surface-75: rgb(237, 241, 246, .75);
   --timberwolf-15: rgb(204, 197, 185, 15%);
   --timberwolf-30: rgb(204, 197, 185, 30%);
-  --black-olive: rgb(64, 61, 57);
+  --black-olive: #403d39;
+  --black-secondary: #4f4c47;
   --black-olive-75: rgb(64, 61, 57, .75);
   --black-olive-50: rgb(64, 61, 57, .5);
   --neutral: rgba(34,34,38,0.15);
@@ -56,6 +57,7 @@ body {
   --flame-15: rgb(235, 94, 40, 15%);
   --base-gradient: var(--floral-white), var(--timberwolf), var(--black-olive), var(--eerie-black), var(--flame);
   --neutral-gradient: var(--flame-15), white;
+  --bet-primary: #28B5EB;
   --danger: #e74c3c;
   --danger-90: rgba(231, 76, 60, 0.9);
   --danger-75: rgba(231, 76, 60, 0.75);
