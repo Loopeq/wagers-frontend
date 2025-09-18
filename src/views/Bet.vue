@@ -7,17 +7,19 @@ import BettingEvents from '@/components/betting/BettingEvents.vue';
 import BettingEvent from '@/components/betting/BettingEvent.vue';
 import BettingCart from '@/components/betting/BettingCart.vue';
 import { useRoute, useRouter } from 'vue-router';
-
+import { useAuthBettingStore } from '@/store/authBetting.module';
 
 const betStore = useBetStore();
 const route = useRoute();
 const router = useRouter();
+const authBettingStore = useAuthBettingStore();
 
 useHead({
     title: 'Bet'
 })
 
 onMounted(async() => {
+  await authBettingStore.checkAuth();
   await betStore.getSports();
   const sport = route.params?.sportId || betStore.sports[0]?.id;
   betStore.sportId = sport;

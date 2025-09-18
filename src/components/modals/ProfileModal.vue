@@ -1,0 +1,55 @@
+<script setup>
+import { ref, watch } from 'vue';
+import UiModalWrapper from '@/ui/UiModalWrapper/UiModalWrapper.vue';
+import { defineProps, defineEmits } from 'vue';
+import UiButtonExtra from '@/ui/UiButtonExtra/UiButtonExtra.vue';
+import { useAuthBettingStore } from '@/store/authBetting.module';
+
+const authBettingStore = useAuthBettingStore();
+const props = defineProps({ show: Boolean });
+const emit = defineEmits(['update:show']);
+
+const isVisible = ref(props.show);
+
+watch(() => props.show, (val) => {
+  isVisible.value = val;
+});
+
+const handleExit = async () => {
+    await authBettingStore.logout();
+    closeModal();
+}
+
+
+function closeModal() {
+  isVisible.value = false;
+  emit('update:show', false);
+}
+</script>
+
+<template>
+  <UiModalWrapper :show="isVisible" @update:show="closeModal">
+    <div class="modal-content">
+      <h2 class="modal-content__title">Your account</h2>
+      <div class="modal-action">
+        <UiButtonExtra variant="primary" size="stretch" @click="handleExit">Exit account</UiButtonExtra>
+      </div>
+    </div>
+  </UiModalWrapper>
+</template>
+
+<style scoped lang="scss">
+.modal-content {
+  display: flex;
+  flex-direction: column;
+
+  &__title{
+    align-self: center;
+  }
+}
+
+.modal-action {
+  width: 100%;
+  margin-top: 20px;
+}
+</style>

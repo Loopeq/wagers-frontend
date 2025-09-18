@@ -40,6 +40,7 @@ body {
 :root{
   --floral-white: rgb(255, 252, 242);
   --floral-white-80: rgb(255, 252, 242, .8);
+  --floral-white-30: rgb(255, 252, 242, .3);
   --timberwolf: #89a0b2;
   --surface: rgb(237, 241, 246);
   --surface-50: rgb(237, 241, 246, .5);
@@ -95,7 +96,8 @@ body {
   --border-radius-small: 8px;
   --container-padding: 0px 40px;
   --header-height: 60px;
-  --header-bet-height: 140px;
+  --header-bet-height: 60px;
+
 }
 html{
   font-size: 10px;
@@ -231,5 +233,6 @@ input:-webkit-autofill {
 *::-webkit-scrollbar-corner {
   background: transparent; /* угол скроллбаров прозрачный */
 }
+
 
 </style>

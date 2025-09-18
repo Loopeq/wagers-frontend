@@ -4,9 +4,18 @@ import { useBetStore } from '@/store/bet.module';
 import { capitalizer } from '@/utils/core';
 import { useRouter } from 'vue-router';
 import { computed } from 'vue';
+import UiButtonExtra from '@/ui/UiButtonExtra/UiButtonExtra.vue';
+import { useLoginModal } from '@/use/useLoginModal';
+import { useRegisterModal } from '@/use/useRegisterModal';
+import { useAuthBettingStore } from '@/store/authBetting.module';
+import { useProfileModal } from '@/use/useProfileAccount';
 
 const router = useRouter();
 const betStore = useBetStore();
+const loginModal = useLoginModal();
+const registerModal = useRegisterModal();
+const authBettingStore = useAuthBettingStore();
+const profileModal = useProfileModal(); 
 
 const onSportChange = (sport) => {
     router.push({ name: 'Betting', params: { sportId: sport.id } });
@@ -14,7 +23,6 @@ const onSportChange = (sport) => {
 }
 const getSportCount = (sport) => sport.match_count ?? 0;
 const selectedSport = computed(() => betStore.sportId);
-
 </script>
 <template>
     <header class="header">
@@ -35,6 +43,18 @@ const selectedSport = computed(() => betStore.sportId);
                     <span>{{capitalizer(sport.name)}}</span>
                 </div>
             </div>
+            <template v-if="authBettingStore.isAuthenticated">
+                <div class="header__icon-profile-wrapper">
+                    <UiIcon @click="profileModal.open()" class="icon-profile" name="profile" />
+                </div>
+            </template>
+            <template v-else>
+                <div class="header__sign-wrapper">
+                    <UiButtonExtra variant="secondary" @click="loginModal.open()">Вход</UiButtonExtra>
+                    <UiButtonExtra variant="primary" @click="registerModal.open()">Регистрация</UiButtonExtra>
+                </div>
+            </template>
+
         </div>
     </header>
 </template>
@@ -44,25 +64,37 @@ header{
     background-color: #fff;
     background-color: var(--eerie-black);
 }
-
+.icon-profile{
+    width: 25px; 
+    height: 25px;
+    margin-right: 5px;
+    cursor: pointer;
+}
 .header{ 
     width: 100%; 
     padding: var(--container-padding);
     position: fixed;
     z-index: 2;
 
+    &__icon-profile-wrapper{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 52px;
+    }
+
     &-wrapper{
         width: 100%;
-        height: 120px;
+        height: fit-content;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: flex-start;
         justify-content: center;
-        gap: 10px;
+        gap: 15px;
     }
     &-logo{
-        width: 300px;
-        height: auto;
+        height: 50px;
+        width: 160px;
     }
 
     &__row{
@@ -122,6 +154,7 @@ header{
         gap: 3px;
         padding: 10px 20px;
         padding-bottom: 5px;
+        padding-top: 12px;
         transition: all 0.2;
         border-bottom: 5px solid transparent;
 
@@ -132,16 +165,20 @@ header{
 
         &:hover{
             background-color: var(--timberwolf-15);
-            border-top-left-radius: var(--border-radius-medium);
-            border-top-right-radius: var(--border-radius-medium);
             cursor: pointer;
         }
         &.selected{
             background-color: var(--timberwolf-15);
-            border-top-left-radius: var(--border-radius-medium);
-            border-top-right-radius: var(--border-radius-medium);
             border-bottom: 5px solid var(--flame);
         }
+    }
+
+    &__sign-wrapper{
+        display: flex;
+        height: 52px;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
     }
 }
 </style>

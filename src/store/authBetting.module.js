@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import api from '@/services/api'
 import qs from 'qs'
 
-export const useAuthStore = defineStore('auth', () => {
+export const useAuthBettingStore = defineStore('authBetting', () => {
   const isAuthenticated = ref(false)
   const checkedAuth = ref(false);
   const user = ref(null);
@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const registration = async (payload) => {
-    await api.post('/registration/dashboard', payload );
+    await api.post('/registration/betting/', payload );
   }
 
   const logout = async () => {
