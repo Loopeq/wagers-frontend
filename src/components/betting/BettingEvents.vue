@@ -6,8 +6,8 @@ const route = useRoute();
 const router = useRouter();
 const betStore = useBetStore();
 
-const onEventClick = (matchId) => {
-  router.push({ name: 'Betting', params: {...route.params, matchId: matchId } })
+const onEventClick = (matchId, leagueId) => {
+  router.push({ name: 'Betting', params: {...route.params, matchId: matchId, leagueId: leagueId, } })
 }
 
 </script>
@@ -17,10 +17,7 @@ const onEventClick = (matchId) => {
       <div 
         v-for="(leagues, date) in betStore.events" 
         :key="date" 
-        class="event-day"
       >
-        <h2 class="event-date">{{ date }}</h2>
-  
         <div 
           v-for="(matches, leagueName) in leagues" 
           :key="leagueName" 
@@ -31,7 +28,7 @@ const onEventClick = (matchId) => {
           <div 
             v-for="match in matches" 
             :key="match.id" 
-            @click="onEventClick(match.id)"
+            @click="onEventClick(match.id, match.league_id)"
             class="match-card"
           >
             <div class="teams">
@@ -39,7 +36,7 @@ const onEventClick = (matchId) => {
               <span class="team">{{ match.away }}</span>
             </div>
             <div class="time">
-                {{ new Date(match.start_time + "Z").toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', hour12: false }) }}
+                <span class="date-time">{{date}}</span>{{ new Date(match.start_time + "Z").toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', hour12: false }) }}
             </div>
           </div>
         </div>
@@ -114,6 +111,10 @@ const onEventClick = (matchId) => {
     color: var(--black-olve);
     white-space: nowrap;
     margin-right: 20px;
+  }
+
+  .date-time{
+    margin-right: 10px;
   }
 }
 </style>

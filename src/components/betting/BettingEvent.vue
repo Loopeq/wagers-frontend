@@ -1,6 +1,6 @@
 <script setup>
 import { useBetStore } from '@/store/bet.module';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { capitalizer } from '@/utils/core';
 import { useRoute, useRouter } from 'vue-router';
 import { getBetVariant } from '@/utils';
@@ -10,6 +10,8 @@ const route = useRoute();
 const betStore = useBetStore();
 const bets = computed(() => betStore.bets)
 const event = computed(() => betStore.event)
+const localBetCart = ref({})
+
 
 const getLocDate = (date) => {
   const lDate = new Date(date + "Z").toLocaleString('ru-RU', {  
@@ -24,6 +26,11 @@ const getLocDate = (date) => {
 
 const onLeagueClick = (leagueId) => {
   router.push({ name: 'Betting', params: {...route.params, leagueId: leagueId, matchId: '' } })
+}
+
+const onBetAdd2Cart = async (betId, side) => {
+  await betStore.postBet2Cart(betId, 1, side);
+  await betStore.getUserCart();
 }
 </script>
 
@@ -45,18 +52,22 @@ const onLeagueClick = (leagueId) => {
               <div class="betting-event__bet-variant-wrapper">
                 <div class="betting-event__bet-variants" v-for="(variant, index) in variants" :key="index">
                   <div class="betting-event__bet-variant">
-                    <div class="betting-event__bet-cell">
-                        <span>{{ getBetVariant(variant, event.home_team, 1) }}</span>
-                        <span class="betting-event__bet-coeff">{{ variant.home_cf }}</span>
-                    </div>
-                    <div class="betting-event__bet-cell">
-                      <span>{{ getBetVariant(variant, event.away_team, 0) }}</span>
-                      <span class="betting-event__bet-coeff">{{ variant.away_cf }}</span>
+                    <div 
+                      v-for="(b, i) in [
+                          { side: 0, label: event.home_team, cf: variant.home_cf },
+                          { side: 1, label: event.away_team, cf: variant.away_cf }
+                        ]" 
+                      :key="i"
+                      class="betting-event__bet-cell"
+                      :class="{ 'betting-event__bet-cell--selected': `${variant.id}_${b.side}` in betStore.betId2Cart }"
+                      @click="onBetAdd2Cart(variant.id, b.side)"
+                    >
+                      <span>{{ getBetVariant(variant, b.label, b.side) }}</span>
+                      <span class="betting-event__bet-coeff">{{ b.cf }}</span>
                     </div>
                   </div>
                 </div>
                 </div>
-
           </div>
       </div>
     </div>
@@ -147,8 +158,13 @@ const onLeagueClick = (leagueId) => {
     border: 1px solid var(--neutral);
     background-color: var(--black-olive);;
 
+    &--selected{
+      background: var(--flame);
+      --bet-primary: var(--floral-white);
+    }
+
     &:hover{
-      border: 1px solid var(--flame);
+      border: 1px solid var(--flame-70);
       cursor: pointer;
     }
   }

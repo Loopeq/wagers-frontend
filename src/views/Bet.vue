@@ -23,12 +23,12 @@ onMounted(async() => {
   await betStore.getSports();
   const sport = route.params?.sportId || betStore.sports[0]?.id;
   betStore.sportId = sport;
-  if (!route.params?.sportId) {
-    router.push({ name: 'Betting', params: { ...route.params, sportId: sport } })
-  }
+  router.push({ name: 'Betting', params: { ...route.params, sportId: sport } })
   
   await betStore.getLeagues(sport);
   await betStore.getEvents(route.params?.leagueId, sport);
+  if (route.params?.matchId) await betStore.getBets(route.params?.matchId);
+  await betStore.getUserCart();
 })
 
 watchEffect(async () => {

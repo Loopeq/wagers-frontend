@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import {ref} from 'vue' 
+import {computed, ref} from 'vue' 
 import api from '@/services/api'
 
 export const useBetStore = defineStore('bet', () => {
@@ -9,7 +9,17 @@ export const useBetStore = defineStore('bet', () => {
     const events = ref([]);
     const bets = ref([]);
     const event = ref({});
+    const betCart = ref([]);
 
+    const betId2Cart = computed(() => {
+        const result = {};
+        betCart.value.forEach(bet => {
+            const { bet_id, side, ...rest } = bet;
+            const key = `${bet_id}_${side}`;
+            result[key] = rest;
+        });
+        return result;
+    });
 
     const getSports = async() => {
         try {
@@ -62,6 +72,18 @@ export const useBetStore = defineStore('bet', () => {
         }
     }
 
+    const postBet2Cart = async(betId, amount, side) => {
+        const payload = {bet_id: betId, amount: amount, side: side}
+        const response = await api.post('/betting/cart/bet', payload);
+        return response
+    }
+
+    const getUserCart = async() => {
+        const response = await api.get('/betting/cart/bets');
+        betCart.value = response.data;
+        return response
+    }
+
    return {
         getLeagues,
         getEvents,
@@ -73,5 +95,8 @@ export const useBetStore = defineStore('bet', () => {
         bets,
         event,
         sportId,
+        postBet2Cart,
+        getUserCart,
+        betId2Cart,
    }
 })
