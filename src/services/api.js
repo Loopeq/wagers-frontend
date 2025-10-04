@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+const root = process.env.VUE_APP_SERVER;
+const baseURL = process.env.DEV ? 'https://' + root : 'http://' + root;
+
 const api = axios.create({
-    baseURL: process.env.VUE_APP_SERVER,
+    baseURL: baseURL,
     headers: {
         'Content-Type': 'application/json'
     },
