@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const root = process.env.VUE_APP_SERVER;
-const baseURL = process.env.DEV ? 'https://' + root : 'http://' + root;
+const baseURL = process.env.NODE_ENV === 'development' ? 'http://' + root : 'https://' + root;
 
 const api = axios.create({
     baseURL: baseURL,
