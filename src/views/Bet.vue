@@ -1,6 +1,6 @@
 <script setup>
 import { useHead } from '@vueuse/head';
-import { computed, onMounted, watchEffect } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useBetStore } from '@/store/bet.module';
 import BettingLeaguesList from '@/components/betting/BettingLeaguesList.vue';
 import BettingEvents from '@/components/betting/BettingEvents.vue';
@@ -14,6 +14,7 @@ const route = useRoute();
 const router = useRouter();
 const authBettingStore = useAuthBettingStore();
 
+
 useHead({
     title: 'Bet'
 })
@@ -21,21 +22,46 @@ useHead({
 onMounted(async() => {
   await authBettingStore.checkAuth();
   await betStore.getSports();
-  const sport = route.params?.sportId || betStore.sports[0]?.id;
-  betStore.sportId = sport;
-  router.push({ name: 'Betting', params: { ...route.params, sportId: sport } })
-  
-  await betStore.getLeagues(sport);
-  await betStore.getEvents(route.params?.leagueId, sport);
-  if (route.params?.matchId) await betStore.getBets(route.params?.matchId);
-  await betStore.getUserCart();
+  const sportId = route.params?.sportId || 33;
+  betStore.sportId = sportId;
+  router.push({ name: 'Betting', params: { ...route.params, sportId: sportId } })
+  await betStore.getLeagues(route.params.sportId);
+  await betStore.getEvents(sportId);
+  await betStore.getCart();
+
 })
 
-watchEffect(async () => {
-  if (route.params?.sportId) await betStore.getLeagues(route.params.sportId);
-  if (route.params?.leagueId || route.params?.sportId)  await betStore.getEvents(route.params.leagueId, route.params.sportId);
-  if (route.params?.matchId) await betStore.getBets(route.params.matchId);
-})
+watch(
+  () => route.params.matchId,
+  async (newMatchId, oldMatchId) => {
+    if (newMatchId && (newMatchId !== oldMatchId || oldMatchId === undefined)) {
+      await betStore.getBets(newMatchId);
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  () => route.params.sportId,
+  async (newSportId, oldSportId) => {
+    if (newSportId && (newSportId !== oldSportId || oldSportId === undefined)) {
+      await betStore.getLeagues(newSportId);
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  () => [route.params.leagueId, route.params.sportId],
+  async ([newLeagueId, newSportId], [oldLeagueId, oldSportId]) => {
+    if (
+      (newLeagueId && (newLeagueId !== oldLeagueId || oldLeagueId === undefined)) ||
+      (newSportId && (newSportId !== oldSportId || oldSportId === undefined))
+    ) {
+      await betStore.getEvents(newSportId, newLeagueId);
+    }
+  },
+);
 
 const showSingleEvent = computed(() => { 
   return Boolean(route.params.matchId);
@@ -43,7 +69,7 @@ const showSingleEvent = computed(() => {
 </script>
 
 <template>
-    <div class="betting-grid">
+    <div class="betting-grid" :class="['betting-grid', { 'no-cart': !authBettingStore.isAuthenticated }]">
         <BettingLeaguesList class="betting-leagues"/>
         <Transition name="soft-fade" mode="out-in">
           <component
@@ -52,7 +78,7 @@ const showSingleEvent = computed(() => {
             class="betting-events"
           />
         </Transition>
-        <BettingCart />
+        <BettingCart v-if="authBettingStore.isAuthenticated"/>
     </div>
 </template>
 
@@ -62,7 +88,6 @@ const showSingleEvent = computed(() => {
   }
   .card{
     background-color: var(--eerie-black);
-    border: 1px solid var(--timberwolf-30); 
   }
 </style>
 <style scoped lang="scss">
@@ -72,6 +97,10 @@ const showSingleEvent = computed(() => {
   grid-template-columns: 1.25fr 5fr 1.5fr;
   position: relative;
   height: calc(100vh - var(--header-bet-height) - 10px);
+
+  &.no-cart {
+    grid-template-columns: 1.25fr 6.25fr;
+  }
 }
 
 .betting-leagues,

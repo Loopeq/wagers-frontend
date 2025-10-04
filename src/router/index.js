@@ -3,18 +3,8 @@ import { useAuthStore } from '@/store/auth.module';
 const routes = [
     {
         path: '/',
-        redirect: '/dashboard'
+        redirect: '/betting'
     },
-    {
-        path: '/dashboard',
-        name: 'Dashboard',
-        component: () => import('../views/Dashboard.vue'),
-        meta: {
-            layout: 'main',
-            auth: true,
-            title: "Dashboard"
-        }
-    },  
     {
         path: '/betting/:sportId?/:leagueId?/:matchId?',
         name: 'Betting',

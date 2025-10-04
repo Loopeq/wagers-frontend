@@ -5,6 +5,7 @@ import UiModalWrapper from '@/ui/UiModalWrapper/UiModalWrapper.vue';
 import { defineProps, defineEmits } from 'vue';
 import UiInputExtra from '@/ui/UiInputExtra/UiInputExtra.vue';
 import { useAuthBettingStore } from '@/store/authBetting.module';
+import { useLoginModal } from '@/use/useLoginModal';
 
 const props = defineProps({ show: Boolean });
 const emit = defineEmits(['update:show']);
@@ -16,6 +17,7 @@ watch(() => props.show, (val) => {
 });
 
 const registerStore = useAuthBettingStore();
+const loginModal = useLoginModal();
 
 const email = ref('');
 const password = ref('');
@@ -72,12 +74,17 @@ function closeModal() {
   confirmPassword.value = '';
   errorMessage.value = '';
 }
+
+const onSuggestion = () => {
+  closeModal();
+  loginModal.open();
+}
 </script>
 
 <template>
   <UiModalWrapper :show="isVisible" @update:show="closeModal">
     <div class="modal-content">
-      <h2 class="modal-content__title">Register</h2>
+      <h2 class="modal-content__title">JOIN</h2>
       <div class="modal-content__error-message">{{ errorMessage }}</div>
       <div class="modal-content__form">
         <UiInputExtra v-model="email" type="email" placeholder="Email"/>      
@@ -87,6 +94,7 @@ function closeModal() {
       <div class="modal-action">
         <UiButtonExtra variant="primary" size="stretch" @click="handleConfirm">Confirm</UiButtonExtra>
       </div>
+      <div class="modal-content__suggestion">Already have an account? <button @click="onSuggestion">Sign in</button></div>
     </div>
   </UiModalWrapper>
 </template>
@@ -114,6 +122,16 @@ function closeModal() {
     justify-content: flex-start;
     font-size: 12px;
     color: var(--danger-90);
+  }
+
+  &__suggestion{
+    font-size: 12px;
+    margin-top: 25px;
+    text-align: center;
+
+    button{
+      color: var(--flame);
+    }
   }
 }
 

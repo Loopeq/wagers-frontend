@@ -39,8 +39,6 @@ defineProps({
 
 .input-container input {
   padding: 10px;
-  padding-right: 3rem;
-  width: 300px;
   color: var(--floral-white);
   color: #fff;
   background-color: var(--black-olive);

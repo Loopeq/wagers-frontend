@@ -1,0 +1,6 @@
+{
+  "appId": "com.spredly.app",
+  "appName": "spredly",
+  "webDir": "public",
+  "bundledWebRuntime": false
+}

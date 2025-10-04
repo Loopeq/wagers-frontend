@@ -46,7 +46,7 @@ useHead({
     <div v-if="routeMessage === 'login'" class="form-wrapper">
       <form class="form-layout" @submit.prevent="onLogin">
         <div class="form">
-          <h1 class="form-title">Вход</h1>
+          <h1 class="form-title">Log in</h1>
   
           <span v-if="isAuthFailed" class="error-msg">Неправильный логин или пароль</span>
 
@@ -79,7 +79,7 @@ useHead({
     <div v-if="routeMessage === 'signup'" class="form-wrapper">
       <form class="form-layout" @submit.prevent="onRegister">
         <div class="form">
-          <h1 class="form-title">Регистрация</h1>
+          <h1 class="form-title">Join</h1>
   
           <span v-if="isRegisterFailed" class="error-msg">{{errorMessage}}</span>
 

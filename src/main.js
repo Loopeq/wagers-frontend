@@ -7,11 +7,13 @@ import dateUtils from '@/plugins/dateUtils';
 import betUtils from '@/plugins/betUtils'
 import { createHead } from '@vueuse/head'
 
-const req = require.context(
-    '@/assets/icons', 
-    true,             
-    /\.svg$/          
-  )
-  
-  req.keys().forEach(req)
-createApp(AppBase).use(createPinia()).use(createHead()).use(router).use(dateUtils).use(betUtils).mount('#app')
+const icons = import.meta.glob('@/assets/icons/*.svg', { eager: true })
+Object.values(icons).forEach((module) => module.default)
+
+createApp(AppBase)
+  .use(createPinia())
+  .use(createHead())
+  .use(router)
+  .use(dateUtils)
+  .use(betUtils)
+  .mount('#app')

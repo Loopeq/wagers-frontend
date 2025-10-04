@@ -7,7 +7,6 @@ import '@mdi/font/css/materialdesignicons.css';
 import {computed} from 'vue';
 import {useRoute} from 'vue-router';
 import AuthLayout from './layout/AuthLayout.vue';
-import MainLayout from './layout/MainLayout.vue';
 import AdminLayout from './layout/AdminLayout.vue';
 import BetLayout from './layout/BetLayout.vue';
 
@@ -18,7 +17,7 @@ export default {
       layout: computed(() => route.meta.layout)
     }
   },
-  components: {AuthLayout, MainLayout, AdminLayout, BetLayout}
+  components: {AuthLayout, AdminLayout, BetLayout}
 }
 </script> 
 

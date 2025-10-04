@@ -30,14 +30,20 @@ export function value_diff(left, right){
 }
 
 export function getBetVariant(variant, teamName, isMain) {
-    switch (variant.type) {
-        case 'moneyline': return teamName;
-        case 'spread': return isMain ? variant.point : -variant.point;
-        case 'team_total': {
+    const parts = variant.key.split(";");
+    const key = parts[parts.length - 1];
+    switch (key) {
+        case 'm': return teamName;
+        case 's': return isMain ? variant.point : -variant.point;
+        case 'tt': {
             const isHome = variant.key.includes('home');
             return `${isHome ? 'Over' : 'Under'} ${variant.point}`;
         }
-        case 'total': return `${isMain ? 'Over' : 'Under'} ${variant.point}`;
+        case 'ou': return `${isMain ? 'Over' : 'Under'} ${variant.point}`;
         default: throw new Error(`Unknown variant type: ${variant.type}`);
     }
+}
+
+export function overNull(coeff){
+    return coeff.toFixed(3);
 }

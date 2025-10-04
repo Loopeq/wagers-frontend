@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import {computed, ref} from 'vue' 
 import api from '@/services/api'
+import { useAuthBettingStore } from './authBetting.module'
+import { useLoginModal } from '@/use/useLoginModal'
 
 export const useBetStore = defineStore('bet', () => {
     const sports = ref([]);
@@ -10,14 +12,19 @@ export const useBetStore = defineStore('bet', () => {
     const bets = ref([]);
     const event = ref({});
     const betCart = ref([]);
+    const loginModal = useLoginModal();
+    let betWs = null;
+
+    const authStore = useAuthBettingStore();
 
     const betId2Cart = computed(() => {
         const result = {};
-        betCart.value.forEach(bet => {
-            const { bet_id, side, ...rest } = bet;
-            const key = `${bet_id}_${side}`;
-            result[key] = rest;
-        });
+        betCart.value
+            .filter(bet => bet && bet.bet.id) 
+            .forEach(bet => {
+                const key = `${bet.bet.id}_${bet.side}`;
+                result[key] = bet;
+            });
         return result;
     });
 
@@ -43,7 +50,7 @@ export const useBetStore = defineStore('bet', () => {
         }
     }
 
-    const getEvents = async(leagueId, sportId) => {
+    const getEvents = async(sportId, leagueId) => {
         try {
             const params = { sport_id: sportId }
             if (leagueId){
@@ -66,22 +73,51 @@ export const useBetStore = defineStore('bet', () => {
             });
             bets.value = response?.data.bets
             event.value = response?.data.event
-
         } catch (e) {
+            console.log(e);
+        }
+    }
+
+
+    const getCart = async () => {
+        if (authStore.isAuthenticated) {
+          const response = await api.get('/betting/cart/bets');
+          betCart.value = response.data;
+          return betCart.value;
+        }
+      };
+
+    const addToCart = async (variant, bet) => {
+        if (authStore.isAuthenticated) {
+            const payload = { id: variant.id, amount: 1, side: bet.side, currency: 'USD' };
+            await api.post('/betting/cart/bet', payload);
+            await getCart();
+        } else {
+            loginModal.open();
+        }
+    };
+
+    const removeItemFromCart = async (betId) => {
+        try{
+            await api.delete('/betting/cart/bet', {
+                params: {
+                    bet_id: betId
+                }
+            })
+            await getCart();
+        } catch (e){ 
             console.error(e);
         }
     }
 
-    const postBet2Cart = async(betId, amount, side) => {
-        const payload = {bet_id: betId, amount: amount, side: side}
-        const response = await api.post('/betting/cart/bet', payload);
-        return response
-    }
 
-    const getUserCart = async() => {
-        const response = await api.get('/betting/cart/bets');
-        betCart.value = response.data;
-        return response
+    const removeCart = async () => {
+        try{
+            await api.delete('/betting/cart')
+            await getCart();
+        } catch (e){ 
+            console.error(e);
+        }
     }
 
    return {
@@ -95,8 +131,11 @@ export const useBetStore = defineStore('bet', () => {
         bets,
         event,
         sportId,
-        postBet2Cart,
-        getUserCart,
+        getCart,
+        addToCart,
         betId2Cart,
+        betCart,
+        removeItemFromCart,
+        removeCart
    }
 })

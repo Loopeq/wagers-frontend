@@ -1,22 +1,50 @@
 <script setup>
 import UiIcon from '@/ui/UiIcon/UiIcon.vue';
+import { useBetStore } from '@/store/bet.module';
+import { computed } from 'vue';
+import { overNull } from '@/utils';
+import { useRoute, useRouter } from 'vue-router';
+import UiInputExtra from '@/ui/UiInputExtra/UiInputExtra.vue';
 
+const router = useRouter();
+const route = useRoute();
+const betStore = useBetStore();
+const cart = computed(() => betStore.betCart);
+
+const removeItemFromCart = (id) => {
+  betStore.removeItemFromCart(id);
+}
+
+const getCoeff = (item) => {
+  const home = item.bet.home_cf;
+  const away = item.bet.away_cf;
+
+  return overNull(item.side ? away : home);
+}
+
+const onEventClick = (eventId) => {
+  router.push({ name: 'Betting', params: {...route.params, matchId: eventId } })
+}
 </script>
 
 <template>
-  <div class="betting-cart-item card">
+  <div v-for='item in cart' :key="item.id" class="betting-cart-item card">
     <div class="betting-cart-item__head">
       <UiIcon class="icon" name="tennis" />
-      <div class="betting-cart-item__league">ITF Men Guiyang - R16</div>
-      <UiIcon class="icon-trash" name="remove" />
+      <div class="betting-cart-item__league">{{ item.bet.match.league.name }}</div>
+      <UiIcon @click="removeItemFromCart(item.id)" class="icon-trash" name="remove" />
     </div>
     <div class="betting-cart-item__bet-wrapper">
-      <div class="betting-cart-item__bet">Money Line (Sets) - 1st Set</div>
-      <div class="betting-cart-item__bet-coeff">2.300</div>
+      <div class="betting-cart-item__bet">{{ item.bet.period.name }}</div>
+      <div class="betting-cart-item__bet-coeff">{{ getCoeff(item) }}</div>
     </div>
-    <div class="betting-cart-item__parts">
-      <div class="betting-cart-item__part">Yaojie Zeng</div>
-      <div class="betting-cart-item__part">Xiaofei Wang</div>
+    <div class="betting-cart-item__parts" @click="onEventClick(item.bet.match.id)">
+      <div class="betting-cart-item__part">{{ item.bet.match.members.home.name }}</div>
+      <div class="betting-cart-item__part">{{ item.bet.match.members.away.name }}</div>
+    </div>
+    <div class="betting-cart-item__inputs">
+      <UiInputExtra class="betting-cart-item__input" placeholder="Stake"/>
+      <UiInputExtra class="betting-cart-item__input" placeholder="Win"/>
     </div>
   </div>
 </template>
@@ -37,6 +65,16 @@ import UiIcon from '@/ui/UiIcon/UiIcon.vue';
     opacity: 0.8;
   }
 
+  &__inputs{
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+  }
+
+  &__input{
+    width: auto;
+  }
+
   &__bet-wrapper{
     display: flex;
     justify-content: space-between;
@@ -55,6 +93,10 @@ import UiIcon from '@/ui/UiIcon/UiIcon.vue';
     background-color: var(--black-olive);
     padding: 5px 7px;
     gap: 5px;
+
+    &:hover{
+      cursor: pointer;
+    }
   }
 }
 

@@ -1,17 +1,17 @@
 <script setup>
 import { useBetStore } from '@/store/bet.module';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { capitalizer } from '@/utils/core';
 import { useRoute, useRouter } from 'vue-router';
-import { getBetVariant } from '@/utils';
+import { getBetVariant, overNull } from '@/utils';
+import MatchNotFound from './fallbacks/MatchNotFound.vue';
 
 const router = useRouter();
 const route = useRoute();
 const betStore = useBetStore();
 const bets = computed(() => betStore.bets)
 const event = computed(() => betStore.event)
-const localBetCart = ref({})
-
+const eventFound = computed(() => bets.value && event.value);
 
 const getLocDate = (date) => {
   const lDate = new Date(date + "Z").toLocaleString('ru-RU', {  
@@ -28,48 +28,58 @@ const onLeagueClick = (leagueId) => {
   router.push({ name: 'Betting', params: {...route.params, leagueId: leagueId, matchId: '' } })
 }
 
-const onBetAdd2Cart = async (betId, side) => {
-  await betStore.postBet2Cart(betId, 1, side);
-  await betStore.getUserCart();
+const onBetAdd2Cart = async (variant, bet) => {
+  const currentBet = betStore.betId2Cart[`${variant.id}_${bet.side}`] 
+  if(currentBet){
+    betStore.removeItemFromCart(currentBet.id);
+  } else {
+    betStore.addToCart(variant, bet);
+  }
 }
 </script>
 
 <template>
     <div class="betting-event card">
-      <div class="betting-event__match">
-          <div class="betting-event__top-info">
-            <span class="betting-event__top-league" @click="onLeagueClick(event.league_id)">{{event.league_name}}</span>
-          </div>
-          <div class="betting-event__info">
-              <div>{{event.home_team}}</div>
-              <div>{{ event.away_team }}</div>
-              <div>{{ getLocDate(event.start_time) }}</div>
-          </div>
-      </div>
-      <div class="betting-event__bets">
-          <div v-for="variants, title in bets" :key="title" class="betting-event__bet">
-              <div class="betting-event__bet-type">{{ title }}</div>
-              <div class="betting-event__bet-variant-wrapper">
-                <div class="betting-event__bet-variants" v-for="(variant, index) in variants" :key="index">
-                  <div class="betting-event__bet-variant">
-                    <div 
-                      v-for="(b, i) in [
-                          { side: 0, label: event.home_team, cf: variant.home_cf },
-                          { side: 1, label: event.away_team, cf: variant.away_cf }
-                        ]" 
-                      :key="i"
-                      class="betting-event__bet-cell"
-                      :class="{ 'betting-event__bet-cell--selected': `${variant.id}_${b.side}` in betStore.betId2Cart }"
-                      @click="onBetAdd2Cart(variant.id, b.side)"
-                    >
-                      <span>{{ getBetVariant(variant, b.label, b.side) }}</span>
-                      <span class="betting-event__bet-coeff">{{ b.cf }}</span>
+      <template v-if="eventFound">
+
+        <div class="betting-event__match">
+            <div class="betting-event__top-info">
+              <span class="betting-event__top-league" @click="onLeagueClick(event.league_id)">{{event.league_name}}</span>
+            </div>
+            <div class="betting-event__info">
+                <div>{{event.home_team}}</div>
+                <div>{{ event.away_team }}</div>
+                <div>{{ getLocDate(event.start_time) }}</div>
+            </div>
+        </div>
+        <div class="betting-event__bets">
+            <div v-for="variants, title in bets" :key="title" class="betting-event__bet">
+                <div class="betting-event__bet-type">{{ title }}</div>
+                <div class="betting-event__bet-variant-wrapper">
+                  <div class="betting-event__bet-variants" v-for="(variant, index) in variants" :key="index">
+                    <div class="betting-event__bet-variant">
+                      <div 
+                        v-for="(b, i) in [
+                            { side: 0, label: event.home_team, cf: variant.home_cf },
+                            { side: 1, label: event.away_team, cf: variant.away_cf }
+                          ]" 
+                        :key="i"
+                        class="betting-event__bet-cell"
+                        :class="{ 'betting-event__bet-cell--selected': `${variant.id}_${b.side}` in betStore.betId2Cart }"
+                        @click="onBetAdd2Cart(variant, b)"
+                      >
+                        <span>{{ getBetVariant(variant, b.label, b.side) }}</span>
+                        <span class="betting-event__bet-coeff">{{ overNull(b.cf) }}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                </div>
-          </div>
-      </div>
+                  </div>
+            </div>
+        </div>
+      </template>
+      <template v-else>
+        <MatchNotFound />
+      </template>
     </div>
   </template>
 
