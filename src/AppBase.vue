@@ -54,8 +54,9 @@ body {
   --eerie-black: #252422;
   --flame: rgb(235, 94, 40);
   --flame-70: rgb(235, 94, 40, 80%);
+  --flame-secondary: rgb(255, 85, 0);
   --flame-15: rgb(235, 94, 40, 15%);
-  --base-gradient: var(--floral-white), var(--timberwolf), var(--black-olive), var(--eerie-black), var(--flame);
+  --base-gradient: var(--black-olive), var(--eerie-black), var(--flame-70);
   --neutral-gradient: var(--flame-15), white;
   --bet-primary: #28B5EB;
   --danger: #e74c3c;
@@ -104,6 +105,7 @@ html{
   color: var(--eerie-black);
   font-family: 'Roboto';
 }
+
 body{
   background-color: var(--surface);
 }
@@ -231,6 +233,97 @@ input:-webkit-autofill {
 
 *::-webkit-scrollbar-corner {
   background: transparent; /* угол скроллбаров прозрачный */
+}
+
+.point{
+  font-size: 10px;
+  color: var(--floral-white);
+}
+
+.lock-icon{
+  width: 20px;
+  height: 20px;
+  color: var(--floral-white);
+}
+
+.lines{
+
+  &__head{
+    display: flex;
+    padding-bottom: 5px;
+
+    & > *{
+      flex: 1;
+    }
+
+    &--last{
+      padding-top: 5px;
+    }
+  }
+
+  &__th{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--floral-white-80);
+    font-size: 10px;
+  }
+
+  &__bet-variants{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__bet-cluster{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  &__bet-variant{
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  &__bet-cell{
+    display: flex; 
+    flex: 1;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid var(--neutral);
+    background-color: var(--black-olive);;
+
+    &--selected{
+      background: var(--flame);
+      --bet-primary: var(--floral-white);
+    }
+
+    &:hover{
+      border: 1px solid var(--flame-70);
+      cursor: pointer;
+    }
+
+    &--lock{
+      cursor: not-allowed !important;
+      color: var(--floral-white);
+      align-items: center;
+      justify-content: center;
+      max-height: 36px;
+    }
+
+    &__label{
+      max-width: 70%;
+      text-wrap: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &__bet-coeff{
+    color: var(--bet-primary);
+  }
 }
 
 

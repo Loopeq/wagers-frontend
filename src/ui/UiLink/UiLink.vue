@@ -2,6 +2,9 @@
 import { defineProps } from 'vue';
 
 defineProps({
+  link: {
+    type: String,
+  },
   variant: {
     type: String,
     default: 'primary', // primary | secondary
@@ -20,33 +23,47 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 
 <template>
-  <button
-    class="ui-button"
-    :class="[`ui-button--${variant}`, `ui-button--${size}`]"
-    :type="type"
-    :disabled="disabled"
+  <a
+    class="ui-link"
+    :href="loading || disabled ? null : link"
+    target="_blank"
+    :class="[
+      `ui-link--${variant}`,
+      `ui-link--${size}`,
+      { 'ui-link--loading': loading }
+    ]"
+    :disabled="disabled || loading"
   >
-    <slot />
-  </button>
+    <span v-if="!loading">
+      <slot />
+    </span>
+    <span v-else class="spinner"></span>
+  </a>
 </template>
 
 <style lang="scss" scoped>
-.ui-button {
+.ui-link {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: 0.5rem 1.5rem;
+  padding: 8px 15px;
   font-size: 12px;
   font-weight: 600;
   line-height: 140%;
   cursor: pointer;
   transition: background-color 0.23s ease, color 0.23s ease;
   border: none;
-  border-radius: var(--border-radius-small);
+  border-radius: 5px;
+  text-decoration: unset;
+  position: relative;
 
   &:disabled {
     cursor: not-allowed;
@@ -69,7 +86,7 @@ defineProps({
     border: 1px solid var(--floral-white-30);
 
     &:hover:not(:disabled) {
-        background-color: rgba(255,255,255,.45);
+      background-color: rgba(255,255,255,.45);
     }
 
     &:disabled {
@@ -79,8 +96,23 @@ defineProps({
     }
   }
 
-  &--stretch{
+  &--stretch {
     width: 100%;
+  }
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 </style>

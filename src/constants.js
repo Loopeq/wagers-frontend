@@ -89,6 +89,5 @@ export const perPage = 50;
 
 
 export const AppRoutes = {
-    DASHBOARD: '/dashboard',
-    BETTING: '/betting',
+    BETTING: '/',
 }

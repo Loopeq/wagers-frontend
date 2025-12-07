@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia'
 import {computed, ref} from 'vue' 
 import api from '@/services/api'
-import { useAuthBettingStore } from './authBetting.module'
-import { useLoginModal } from '@/use/useLoginModal'
+import { useAuthStore } from './auth.module'
 
 export const useBetStore = defineStore('bet', () => {
     const sports = ref([]);
@@ -10,12 +9,24 @@ export const useBetStore = defineStore('bet', () => {
     const leagues = ref([]);
     const events = ref([]);
     const bets = ref([]);
-    const event = ref({});
+    const rawPeriods = ref([]);
+    const currentSport = computed(() => {
+        return sports.value.find(sport => String(sport.id) === String(sportId.value)) || null;
+    });
+    const periodsBySport = computed(() => {
+        if (!rawPeriods.value) return {}
+        const result = {};
+        rawPeriods.value.forEach(([sportId, periods]) => {
+          result[sportId] = {};
+          periods.forEach(([periodId, ...names]) => {
+            result[sportId][periodId] = names;
+          });
+        });
+        return result;
+      });
     const betCart = ref([]);
-    const loginModal = useLoginModal();
-    let betWs = null;
 
-    const authStore = useAuthBettingStore();
+    const authStore = useAuthStore();
 
     const betId2Cart = computed(() => {
         const result = {};
@@ -30,8 +41,17 @@ export const useBetStore = defineStore('bet', () => {
 
     const getSports = async() => {
         try {
-            const response = await api.get('/betting/sports');
+            const response = await api.get('/public/sports');
             sports.value = response?.data
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    const getPeriods = async() => {
+        try {
+            const response = await api.get('/public/periods');
+            rawPeriods.value = response?.data
         } catch (e) {
             console.error(e);
         }
@@ -39,7 +59,7 @@ export const useBetStore = defineStore('bet', () => {
     
     const getLeagues = async(sportId) => {
         try {
-            const response = await api.get('/betting/leagues', {
+            const response = await api.get('/public/leagues', {
                 params:{
                     sport_id: sportId,
                 }
@@ -56,7 +76,7 @@ export const useBetStore = defineStore('bet', () => {
             if (leagueId){
                 params.league_id = leagueId ?? '';
             }
-            const response = await api.get('/betting/events', {
+            const response = await api.get('/public/events', {
                 params: params
             });
             events.value = response?.data
@@ -68,11 +88,10 @@ export const useBetStore = defineStore('bet', () => {
     const getBets = async(matchId) => {
         try {
             const params = { match_id: matchId }
-            const response = await api.get('/betting/bets', {
+            const response = await api.get('/public/bets', {
                 params: params
             });
-            bets.value = response?.data.bets
-            event.value = response?.data.event
+            bets.value = response?.data
         } catch (e) {
             console.log(e);
         }
@@ -81,7 +100,7 @@ export const useBetStore = defineStore('bet', () => {
 
     const getCart = async () => {
         if (authStore.isAuthenticated) {
-          const response = await api.get('/betting/cart/bets');
+          const response = await api.get('/public/cart/bets');
           betCart.value = response.data;
           return betCart.value;
         }
@@ -90,7 +109,7 @@ export const useBetStore = defineStore('bet', () => {
     const addToCart = async (variant, bet) => {
         if (authStore.isAuthenticated) {
             const payload = { id: variant.id, amount: 1, side: bet.side, currency: 'USD' };
-            await api.post('/betting/cart/bet', payload);
+            await api.post('/public/cart/bet', payload);
             await getCart();
         } else {
             loginModal.open();
@@ -99,7 +118,7 @@ export const useBetStore = defineStore('bet', () => {
 
     const removeItemFromCart = async (betId) => {
         try{
-            await api.delete('/betting/cart/bet', {
+            await api.delete('/public/cart/bet', {
                 params: {
                     bet_id: betId
                 }
@@ -113,7 +132,7 @@ export const useBetStore = defineStore('bet', () => {
 
     const removeCart = async () => {
         try{
-            await api.delete('/betting/cart')
+            await api.delete('/public/cart')
             await getCart();
         } catch (e){ 
             console.error(e);
@@ -124,13 +143,15 @@ export const useBetStore = defineStore('bet', () => {
         getLeagues,
         getEvents,
         getBets,
+        getPeriods,
         getSports,
         sports,
+        currentSport,
         leagues,
         events,
         bets,
-        event,
         sportId,
+        periodsBySport,
         getCart,
         addToCart,
         betId2Cart,

@@ -13,6 +13,7 @@ export function capitalizer(str){
 }
 
 export function formatOdd(american) {
+    if (!american) return null
     if (american > 0) {
         return (1 + american / 100).toFixed(3);
     } else if (american < 0) {
@@ -20,4 +21,18 @@ export function formatOdd(american) {
     } else {
         throw new Error("American odds cannot be 0");
     }
-  }
+}
+
+export const formatTime = (time) => {
+    const date = new Date(time);
+  
+    const pad = (n) => n.toString().padStart(2, '0');
+  
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const day = pad(date.getDate());
+    const month = pad(date.getMonth() + 1); // месяцы от 0
+    const year = date.getFullYear();
+  
+    return `${hours}:${minutes} ${day}.${month}.${year}`;
+  };

@@ -3,7 +3,8 @@ import { useBetStore } from '@/store/bet.module';
 import { useRoute, useRouter } from 'vue-router';
 import LeagueHeader from './components/LeagueHeader.vue';
 import UiIcon from '@/ui/UiIcon/UiIcon.vue';
-import { formatOdd } from '@/utils/core';
+import { formatOdd, formatTime } from '@/utils/core';
+import { computed } from 'vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -15,18 +16,20 @@ const onEventClick = (matchId, leagueId) => {
 
 const getOddsValue = (obj, key) => (!obj || obj.unavailable || obj.offline ? '—' : formatOdd(obj[key]) ?? '—');
 
-const formatTime = (time) => {
-  const date = new Date(time);
-  return `${date.toLocaleTimeString()} ${date.toLocaleDateString()}`;
-};
-
 const isLocked = (obj) => !obj || obj.unavailable || obj.offline;
+
+const hasDraw = computed(() => {
+  return ['soccer'].includes(betStore.currentSport?.englishName.toLowerCase());
+})
+
 </script>
 
 <template>
   <div class="betting-event card">
-    <div v-for="league in betStore.events.leagues" :key="league.id" class="league-block">
-      <LeagueHeader :leagueName="league.name" />
+    <div v-for="league, index in betStore.events.leagues" :key="league.id" class="league-block">
+      <LeagueHeader :class="{ 'league-header--first': index === 0 }"
+      :leagueName="league.name"
+      :hasDraw="hasDraw" />
       <div v-for="event in league.events" :key="event.id" @click="onEventClick(event.id, league.id)" class="match-card">
         <div class="match-card__event">
           <div class="teams">
@@ -50,6 +53,12 @@ const isLocked = (obj) => !obj || obj.unavailable || obj.offline;
                 <UiIcon class="lock-icon" name="lock"/>
               </button>
               <button class="odd" v-else>{{ getOddsValue(period.moneyLine, 'homePrice') }}</button>
+              <template v-if="hasDraw">
+                <button class="odd lock" v-if="isLocked(period.moneyLine)">
+                  <UiIcon class="lock-icon" name="lock"/>
+                </button>
+                <button v-else class="odd">{{ getOddsValue(period.moneyLine, 'drawPrice') }}</button>
+              </template>
 
               <button class="odd lock" v-if="isLocked(period.moneyLine)">
                 <UiIcon class="lock-icon" name="lock"/>
@@ -127,6 +136,7 @@ const isLocked = (obj) => !obj || obj.unavailable || obj.offline;
     color: var(--bet-primary);
 
     border: 1px solid var(--neutral);
+    border-radius: var(--border-radius-small);
 
     &:hover{
       border: 1px solid var(--flame);
@@ -139,26 +149,6 @@ const isLocked = (obj) => !obj || obj.unavailable || obj.offline;
     align-items: center;
     justify-content: center;
     gap: 3px;
-  }
-
-  .lock{
-    cursor: not-allowed !important;
-    color: var(--floral-white);
-  }
-
-  .lock-icon{
-    width: 10px;
-    height: 10px;
-  }
-
-  .point{
-    font-size: 10px;
-    color: var(--floral-white);
-  }
-  
-  .lock-icon{
-    width: 20px;
-    height: 20px;
   }
 }
 </style>
@@ -174,6 +164,7 @@ const isLocked = (obj) => !obj || obj.unavailable || obj.offline;
   display: flex;
   flex-direction: column;
   margin-left: 10px;
+  color: var(--floral-white);
 }
 
 .event-day {
@@ -195,7 +186,6 @@ const isLocked = (obj) => !obj || obj.unavailable || obj.offline;
   padding: 5px 0;
   padding-right: 20px;
   border-bottom: 1px solid var(--timberwolf-30);
-
   cursor: pointer;
 
   &:first-of-type{

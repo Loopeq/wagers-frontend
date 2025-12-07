@@ -2,11 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/store/auth.module';
 const routes = [
     {
-        path: '/',
-        redirect: '/betting'
-    },
-    {
-        path: '/betting/:sportId?/:leagueId?/:matchId?',
+        path: '/:sportId?/:leagueId?/:matchId?',
         name: 'Betting',
         component: () => import('../views/Bet.vue'),
         meta: {

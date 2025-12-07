@@ -11,7 +11,6 @@ export default defineConfig({
         svgoConfig: {
         plugins: [
             { name: 'removeDimensions', active: false },
-            { name: 'removeAttrs', params: { attrs: '(fill|stroke)' } } 
         ]
         }
     })

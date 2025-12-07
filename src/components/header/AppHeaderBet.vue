@@ -1,141 +1,47 @@
 <script setup>
 import UiIcon from '@/ui/UiIcon/UiIcon.vue';
-import { useBetStore } from '@/store/bet.module';
-import { capitalizer } from '@/utils/core';
-import { useRouter } from 'vue-router';
-import { computed, ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
-import UiButtonExtra from '@/ui/UiButtonExtra/UiButtonExtra.vue';
-import { useLoginModal } from '@/use/useLoginModal';
-import { useRegisterModal } from '@/use/useRegisterModal';
-import { useAuthBettingStore } from '@/store/authBetting.module';
+import { ref, onBeforeUnmount } from 'vue';
+import UiLink from '@/ui/UiLink/UiLink.vue';
+import { useAuthStore } from '@/store/auth.module';
 import { useProfileModal } from '@/use/useProfileAccount';
 
-const router = useRouter();
-const betStore = useBetStore();
-const loginModal = useLoginModal();
-const registerModal = useRegisterModal();
-const authBettingStore = useAuthBettingStore();
+const authStore = useAuthStore();
 const profileModal = useProfileModal(); 
 
-const showMoreSports = ref(false);
-
 const rowRef = ref(null);
-const blockWidth = ref(120);
-const maxVisible = ref(5);
-
-const onSportChange = (sport) => {
-  router.push({ name: 'Betting', params: { sportId: sport.id } });
-  betStore.sportId = String(sport.id);
-  showMoreSports.value = false;
-};
-
-const sportsHavingEvents = computed(() => {
-  return betStore.sports.filter((sport) => sport.totalEvents > 0).sort((a, b) => b.totalEvents - a.totalEvents)
-});
-
-const visibleSports = computed(() =>
-  sportsHavingEvents.value.slice(0, maxVisible.value)
-);
-const hiddenSports = computed(() =>
-  sportsHavingEvents.value.slice(maxVisible.value)
-);
-
-const selectedSport = computed(() => betStore.sportId);
-
-let observer;
-const recalcVisible = () => {
-  if (!rowRef.value) return;
-  const rowWidth = rowRef.value.offsetWidth;
-
-  const firstBlock = rowRef.value.querySelector('.header__event-block');
-  if (firstBlock) {
-    blockWidth.value = firstBlock.offsetWidth || 120;
-  }
-
-  const count = Math.floor(rowWidth / blockWidth.value);
-  maxVisible.value = count > 1 ? count - 2 : 1;
-};
-
-onMounted(() => {
-  nextTick(() => {
-    recalcVisible();
-    observer = new ResizeObserver(recalcVisible);
-    if (rowRef.value) observer.observe(rowRef.value);
-  });
-});
 
 onBeforeUnmount(() => {
   if (observer && rowRef.value) observer.unobserve(rowRef.value);
 });
+
+
+const onLoginInit = async () => {
+  const url = `https://t.me/spredly_bot`;
+  window.open(url, '_blank');
+}
 </script>
 
 <template>
   <header class="header">
     <div class="header-wrapper">
-      <UiIcon class="header-logo" name="logo" />
+        <div class="header-logo__wrapper">
+          <UiIcon class="header-logo" name="logo" />
+        </div>
       <div class="header__row" ref="rowRef">
-        <div
-          v-for="sport in visibleSports"
-          :key="sport.id"
-          class="header__event-block"
-          :class="{ selected: String(selectedSport) === String(sport.id) }"
-          @click="onSportChange(sport)"
-        >
-          <div class="header__row-item">
-            <UiIcon :name="sport.name.toLowerCase()" />
-            <div class="tool">{{ sport.totalEvents }}</div>
-          </div>
-          <span>{{ capitalizer(sport.englishName) }}</span>
-        </div>
-
-        <div
-          v-if="hiddenSports.length > 0"
-          class="header__more-btn"
-          @click="showMoreSports = !showMoreSports"
-        >
-          <UiIcon class="icon-more" name="menu" />
-          <span class="icon-more--content">+ {{ hiddenSports.length }}</span>
-
-          <transition name="fade-slide">
-            <div
-              v-if="showMoreSports"
-              class="hidden-sport-dropdown"
-            >
-              <div
-                v-for="sport in hiddenSports"
-                :key="sport.id"
-                class="dropdown-item"
-                :class="{ selected: String(selectedSport) === String(sport.id) }"
-                @click="onSportChange(sport)"
-              >
-                <div class="header__row-item">
-                  <UiIcon class="icon" :name="sport.englishName.toLowerCase()" />
-                  <div class="tool">{{ sport.totalEvents }}</div>
-                </div>
-                <span>{{ capitalizer(sport.englishName) }}</span>
-              </div>
-            </div>
-          </transition>
-        </div>
       </div>
-
-      <template v-if="authBettingStore.isAuthenticated">
+      <template v-if="authStore.isAuthenticated">
         <div class="header__icon-profile-wrapper">
           <UiIcon
             @click="profileModal.open()"
             class="icon-profile"
             name="profile"
           />
+            <UiLink type="submit" class="header__deposit" link="https://pay.cryptocloud.plus/pos/SbFEQUJUo0yApJXX">Deposit</UiLink>
         </div>
       </template>
       <template v-else>
         <div class="header__sign-wrapper">
-          <UiButtonExtra variant="secondary" @click="loginModal.open()"
-            >LOG IN</UiButtonExtra
-          >
-          <UiButtonExtra variant="primary" @click="registerModal.open()"
-            >JOIN</UiButtonExtra
-          >
+          <UiLink @click="onLoginInit" class="header__sign"><span class="header__sign-text">Login via Telegram</span></UiLink>
         </div>
       </template>
     </div>
@@ -167,6 +73,10 @@ header {
   position: fixed;
   z-index: 2;
 
+  &__deposit{
+    margin-left: 20px;
+  }
+
   &__more-btn {
     display: flex;
     align-items: center;
@@ -179,7 +89,6 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 52px;
   }
 
   &-wrapper {
@@ -189,12 +98,25 @@ header {
     align-items: flex-start;
     justify-content: center;
     gap: 15px;
+    padding: 10px 0px;
     text-wrap: nowrap;
   }
 
+  &-logo__wrapper{
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+  }
+
   &-logo {
-    height: 50px;
-    width: 160px;
+    width: 200px;
+    height: auto;
+  }
+
+  &-title{
+    font-weight: 400;
+    font-size: 35px;
   }
 
   &__row {
@@ -248,10 +170,17 @@ header {
 
   &__sign-wrapper {
     display: flex;
-    height: 52px;
     gap: 10px;
     justify-content: center;
     align-items: center;
+  }
+
+  &__sign{
+    width: 120px;
+  }
+
+  &__sign-title{
+    font-size: 14px;
   }
 }
 

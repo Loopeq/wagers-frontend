@@ -1,125 +1,31 @@
 <script setup >
-import { useLoginForm } from '@/use/login-form';
-import { useRegisterForm } from '@/use/register-form';
-import UiButton from '@/ui/UiButton/UiButton.vue';
-import UiInput from '@/ui/UiInput/UiInput.vue';
-import { useHead } from '@vueuse/head';
-import {computed, ref} from 'vue'
 import { useRoute, useRouter } from 'vue-router';
-import UiIcon from '@/ui/UiIcon/UiIcon.vue';
-
-const {
-  username, password,
-  onLogin, isAuthFailed
-} = useLoginForm();
-
-const {
-  regUsername, regPassword, regConfirmPassword,
-  inviteCode, isRegisterFailed, onRegister, errorMessage,
-} = useRegisterForm();
+import { useAuthStore } from '@/store/auth.module';
+import { onMounted } from 'vue';
 
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
 
-const routeMessage = computed(() => route.query.message || 'login');
 
-const toggleRoute = (message) => {
-  router.replace(
-    {
-      path: route.path,
-      query : {message: message},
-    }
-  )
+onMounted( async () => {
+  const code = route.query.code;
+  try {
+    await authStore.login({
+      code: code
+    });  
+    router.push('/');
+  } catch {
+    console.log('e');   
+  }
 }
-const headTitle = computed(() => {
-  return routeMessage.value === 'login' ? 'Log in' : 'Sign Up';
-})
+)
 
-const passwordShownReg = ref(false);
-const passwordShownLog = ref(false);
-useHead({
-    title: headTitle
-})
 </script>
 
 <template>
     <div v-if="routeMessage === 'login'" class="form-wrapper">
-      <form class="form-layout" @submit.prevent="onLogin">
-        <div class="form">
-          <h1 class="form-title">Log in</h1>
-  
-          <span v-if="isAuthFailed" class="error-msg">Неправильный логин или пароль</span>
 
-          <UiInput class="form-input" placeholder="E-mail" type="email" v-model="username"/>
-          <UiInput 
-            class="form-input" 
-            placeholder="Пароль" 
-            :type="passwordShownLog ? 'text' : 'password'" 
-            v-model="password">
-            <template #icon-right>
-              <UiIcon class="icon-eye" 
-                :name="passwordShownLog ? 'eye-off' : 'eye'" 
-                @click="passwordShownLog = !passwordShownLog"
-                />
-              </template>
-          </UiInput>
-
-          <UiButton class="form-button" type="submit">
-            Войти
-          </UiButton>
-
-          <div class="confirm-switch">
-            Нет аккаунта? <span @click="toggleRoute('signup')">Регистрация</span>
-          </div>
-        </div>
-      </form>
-    </div>
-
-
-    <div v-if="routeMessage === 'signup'" class="form-wrapper">
-      <form class="form-layout" @submit.prevent="onRegister">
-        <div class="form">
-          <h1 class="form-title">Join</h1>
-  
-          <span v-if="isRegisterFailed" class="error-msg">{{errorMessage}}</span>
-
-          <UiInput class="form-input" placeholder="E-mail" type="email" v-model="regUsername"/>
-          <UiInput 
-            class="form-input" 
-            placeholder="Пароль" 
-            :type="passwordShownReg ? 'text' : 'password'" 
-            v-model="regPassword">
-            <template #icon-right>
-              <UiIcon class="icon-eye" 
-                :name="passwordShownReg ? 'eye-off' : 'eye'" 
-                @click="passwordShownReg = !passwordShownReg"
-                />
-              </template>
-          </UiInput>
-          <UiInput 
-            class="form-input" 
-            placeholder="Повторите пароль" 
-            :type="passwordShownReg ? 'text' : 'password'" 
-            v-model="regConfirmPassword">
-            <template #icon-right>
-              <UiIcon 
-                class="icon-eye" 
-                :name="passwordShownReg ? 'eye-off' : 'eye'"
-                @click="passwordShownReg = !passwordShownReg" 
-              />
-              </template>
-          </UiInput>
-          <UiInput class="form-input" placeholder="Пригласительный код" type="text" v-model="inviteCode"/>
-
-          <UiButton class="form-button" type="submit">
-            Зарегистрироваться
-          </UiButton>
-
-          <div class="confirm-switch">
-            Есть аккаунт? <span @click="toggleRoute('login')">Вход</span>
-          </div>
-        </div>
-      </form>
     </div>
 </template>
   

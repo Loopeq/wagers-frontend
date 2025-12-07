@@ -2,9 +2,12 @@
 import { useBetStore } from '@/store/bet.module';
 import { useRoute, useRouter } from 'vue-router';
 import UiIcon from '@/ui/UiIcon/UiIcon.vue';
-import { useTooltip } from '@/use/useTooltip';
 
-const tooltip = useTooltip();
+defineProps({
+    leagues: Array,
+    title: String,
+})
+
 const route = useRoute();
 const router = useRouter();
 const betStore = useBetStore();
@@ -16,14 +19,15 @@ const onLeagueClick = (leagueId) => {
 
 <template>
     <div class="betting-leagues card">
-        <div class="betting-leagues__block-title">Leagues A-Z</div>
+        <div class="betting-leagues__block-title">{{ title }}</div>
         <div 
             class="betting-leagues__league" 
-            v-for="league in betStore.leagues" 
+            v-for="(league, index) in leagues" 
             :key="league.id" 
             @click="onLeagueClick(league.id)"
-            @mouseenter="e => tooltip.show(e, league.name)"
-            @mouseleave="tooltip.hide()"
+            :class="{
+                'betting-leagues__league--last': index === betStore.leagues.length - 1
+            }"
         >
             <div class="betting-leagues__league-content">
                 <UiIcon name="league" class="league-icon" />
@@ -34,7 +38,6 @@ const onLeagueClick = (leagueId) => {
                 {{ league.totalEvents }}
             </div>
         </div>
-
     </div>
 </template>
 
@@ -43,16 +46,36 @@ const onLeagueClick = (leagueId) => {
     display: flex;
     flex-direction: column;
     font-size: 12px;
+    margin-left: 10px;
+    border-radius: var(--border-radius-medium);
+    overflow: auto;
+
+    &__block-title{
+        padding: 10px 20px;
+        background-color: var(--black-olive);
+        border-radius: var(--border-radius-medium);
+        border-end-end-radius: unset;
+        border-end-start-radius: unset;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
 
     &__league{
         cursor: pointer;
         display: flex;
-        justify-content: space-between;
         align-items: center;
         padding: 10px 10px;
         gap: 20px;
+        transition: background-color 0.2s ease;
+        
         &:hover{
             background-color: var(--timberwolf-15);
+        }
+
+        &--last {
+            border-bottom-left-radius: var(--border-radius-medium);
+            border-bottom-right-radius: var(--border-radius-medium);
         }
     }
 
@@ -73,11 +96,6 @@ const onLeagueClick = (leagueId) => {
 
     &__league-event-count{
         color: var(--flame-70)
-    }
-
-    &__block-title{
-        padding: 10px 10px;
-        background-color: var(--black-olive);
     }
 }
 </style>

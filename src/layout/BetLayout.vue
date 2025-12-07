@@ -5,9 +5,7 @@ import AppHeaderBet from '@/components/header/AppHeaderBet.vue';
   <AppHeaderBet />
   <div class="container">
       <router-view v-slot="{ Component, route }">
-        <Transition name="fade" mode="out-in">
             <component :key="route.name" :is="Component"></component>
-        </Transition>
       </router-view>
   </div>
 </template>

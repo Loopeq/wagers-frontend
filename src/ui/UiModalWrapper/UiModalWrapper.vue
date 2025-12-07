@@ -7,6 +7,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  title: {
+    type: String,
+    required: false,
+  }
 });
 
 const emit = defineEmits(['update:show']);
@@ -33,6 +37,7 @@ function closeModal() {
 <template>
   <div v-if="show" class="modal-overlay" @mousedown="onMouseDown" @mouseup="onMouseUp">
     <div class="modal-content">
+      <div v-if="title" class="modal-content__title">{{ title }}</div>
       <slot />
     </div>
   </div>
@@ -54,12 +59,19 @@ function closeModal() {
 .modal-content {
   background-color: var(--eerie-black);
   color: var(--floral-white);
-  padding: 20px 35px;
+
   border-radius: var(--border-radius-medium);
-  min-width: 320px;
+  min-width: 400px;
   max-width: 500px;
+  padding: 35px 50px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.6);
   animation: modalFade 0.2s ease-out;
+
+  &__title{
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
 }
 
 @keyframes modalFade {
