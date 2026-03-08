@@ -32,7 +32,7 @@ const onAdmin = async () => {
                         <UiIcon class="icon" :name="sport.name.toLowerCase()"/>
                         <div class="tool">{{betStore.eventsCountMap[sport.id]}}</div>
                     </div>
-                    <span>{{sport.name_ru}}</span>
+                    <span>{{sport.name}}</span>
                 </div>
                 <div class="header__tools-block" 
                     @mouseleave="userSettingsVisible = false">

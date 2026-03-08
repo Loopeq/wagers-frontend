@@ -45,7 +45,7 @@ export const useBetStore = defineStore('bet', () => {
 
     const getSports = async() => {
         try {
-            const response = await api.get('/sports');
+            const response = await api.get('/market/sports');
             sports.value = response?.data
         } catch (e) {
             console.error(e);
@@ -64,7 +64,7 @@ export const useBetStore = defineStore('bet', () => {
                 offset = 0;
             }
 
-            const response = await api.getWithQuery('/related', {
+            const response = await api.getWithQuery('market/related', {
                 ...params, limit, offset
             })
             if (expand) {
@@ -82,7 +82,7 @@ export const useBetStore = defineStore('bet', () => {
 
     const getStraight = async (params) => {
         try {
-            const response = await api.getWithQuery('/straight', {
+            const response = await api.getWithQuery('/market/straight', {
                 ...params
             })
             event.value = response?.data.match;
@@ -97,7 +97,7 @@ export const useBetStore = defineStore('bet', () => {
 
     const getHistory = async (params) => {
         try {
-            const response = await api.getWithQuery('/statistic/history', {
+            const response = await api.getWithQuery('/market/history', {
                 ...params
             })
             eventHistory.value = response.data;
