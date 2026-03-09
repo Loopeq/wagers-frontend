@@ -57,11 +57,7 @@ export function useRegisterForm(){
                 password: values.password,
                 invite_code: values.code,
             });
-            await store.login({
-                username: values.username,
-                password: values.password,
-            });
-            router.push('/')
+            router.push('/dashboard')
         } catch (e) {
             errorMessage.value = '500. Ошибка на стороне сервера' 
             if (e.status === 400){

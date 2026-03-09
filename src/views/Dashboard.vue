@@ -78,7 +78,7 @@ onBeforeUnmount(() => {
 });
 
 useHead({
-        title: 'Dashboard'
+    title: 'Dashboard'
 })
 </script>
 

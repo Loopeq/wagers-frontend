@@ -38,7 +38,7 @@ export const useBetStore = defineStore('bet', () => {
         hours: null,
         finished: false,
         nulls: false,
-        sort_by: 'last_change',
+        sort_by: 'last_change', 
         sort_order: 'desc',
     })
     const relatedParamsViewMode = ref('all');

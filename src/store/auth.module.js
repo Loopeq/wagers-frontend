@@ -10,7 +10,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isAdmin = computed(() => (user.value.superuser));
 
   const login = async (payload) => {
-    const userResponse = await api.post('/login', qs.stringify(payload),
+    const userResponse = await api.post('/user/login', qs.stringify(payload),
     {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -21,17 +21,19 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const registration = async (payload) => {
-    await api.post('/registration', payload );
+    const userResponse = await api.post('/user/signup', payload );
+    user.value = userResponse.data;
+    isAuthenticated.value = true
   }
 
   const logout = async () => {
-    await api.post('/logout');
+    await api.post('/user/logout');
     isAuthenticated.value = false
   }
 
   async function checkAuth() {
     try {
-      const userResponse = await api.get('/users/me');
+      const userResponse = await api.get('/user/me');
       user.value = userResponse.data;
       isAuthenticated.value = true;
     } catch {
